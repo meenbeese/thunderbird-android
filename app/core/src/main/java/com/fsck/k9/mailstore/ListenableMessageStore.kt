@@ -1,6 +1,5 @@
 package com.fsck.k9.mailstore
 
-import com.fsck.k9.mail.FolderClass
 import java.util.concurrent.CopyOnWriteArraySet
 
 class ListenableMessageStore(private val messageStore: MessageStore) : MessageStore by messageStore {
@@ -26,23 +25,23 @@ class ListenableMessageStore(private val messageStore: MessageStore) : MessageSt
         notifyFolderSettingsChanged()
     }
 
-    override fun setDisplayClass(folderId: Long, folderClass: FolderClass) {
-        messageStore.setDisplayClass(folderId, folderClass)
+    override fun setHidden(folderId: Long, hidden: Boolean) {
+        messageStore.setHidden(folderId, hidden)
         notifyFolderSettingsChanged()
     }
 
-    override fun setSyncClass(folderId: Long, folderClass: FolderClass) {
-        messageStore.setSyncClass(folderId, folderClass)
+    override fun setAutoSyncViaPollEnabled(folderId: Long, enable: Boolean) {
+        messageStore.setAutoSyncViaPollEnabled(folderId, enable)
         notifyFolderSettingsChanged()
     }
 
-    override fun setPushClass(folderId: Long, folderClass: FolderClass) {
-        messageStore.setPushClass(folderId, folderClass)
+    override fun setAutoSyncViaPushEnabled(folderId: Long, enable: Boolean) {
+        messageStore.setAutoSyncViaPushEnabled(folderId, enable)
         notifyFolderSettingsChanged()
     }
 
-    override fun setNotificationClass(folderId: Long, folderClass: FolderClass) {
-        messageStore.setNotificationClass(folderId, folderClass)
+    override fun setNotificationEnabled(folderId: Long, enable: Boolean) {
+        messageStore.setNotificationEnabled(folderId, enable)
         notifyFolderSettingsChanged()
     }
 

@@ -1,6 +1,5 @@
 package com.fsck.k9.mailstore
 
-import com.fsck.k9.mail.FolderClass
 import com.fsck.k9.mail.FolderType
 
 fun interface FolderMapper<T> {
@@ -15,10 +14,10 @@ interface FolderDetailsAccessor {
     val isLocalOnly: Boolean
     val isInTopGroup: Boolean
     val isIntegrate: Boolean
-    val syncClass: FolderClass
-    val displayClass: FolderClass
-    val notifyClass: FolderClass
-    val pushClass: FolderClass
+    val isAutoSyncViaPollEnabled: Boolean
+    val isHidden: Boolean
+    val isNotificationEnabled: Boolean
+    val isAutoSyncViaPushEnabled: Boolean
     val visibleLimit: Int
     val moreMessages: MoreMessages
     val lastChecked: Long?

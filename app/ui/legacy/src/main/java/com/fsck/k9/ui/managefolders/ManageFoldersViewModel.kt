@@ -9,6 +9,6 @@ import com.fsck.k9.mailstore.FolderRepository
 
 class ManageFoldersViewModel(private val folderRepository: FolderRepository) : ViewModel() {
     fun getFolders(account: Account): LiveData<List<DisplayFolder>> {
-        return folderRepository.getDisplayFoldersFlow(account).asLiveData()
+        return folderRepository.getDisplayFoldersFlow(account, showHiddenFolders = true).asLiveData()
     }
 }

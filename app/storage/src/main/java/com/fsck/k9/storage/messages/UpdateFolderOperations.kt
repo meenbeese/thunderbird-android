@@ -1,7 +1,6 @@
 package com.fsck.k9.storage.messages
 
 import android.content.ContentValues
-import com.fsck.k9.mail.FolderClass
 import com.fsck.k9.mail.FolderType
 import com.fsck.k9.mailstore.FolderDetails
 import com.fsck.k9.mailstore.LockableDatabase
@@ -23,12 +22,12 @@ internal class UpdateFolderOperations(private val lockableDatabase: LockableData
     fun updateFolderSettings(folderDetails: FolderDetails) {
         lockableDatabase.execute(false) { db ->
             val contentValues = ContentValues().apply {
-                put("top_group", folderDetails.isInTopGroup)
                 put("integrate", folderDetails.isIntegrate)
-                put("poll_class", folderDetails.syncClass.name)
-                put("display_class", folderDetails.displayClass.name)
-                put("notify_class", folderDetails.notifyClass.name)
-                put("push_class", folderDetails.pushClass.name)
+                put("hidden", folderDetails.isHidden)
+                put("top_group", folderDetails.isInTopGroup)
+                put("auto_sync_poll", folderDetails.isAutoSyncViaPollEnabled)
+                put("auto_sync_push", folderDetails.isAutoSyncViaPushEnabled)
+                put("notify", folderDetails.isNotificationEnabled)
             }
 
             db.update("folders", contentValues, "id = ?", arrayOf(folderDetails.folder.id.toString()))
@@ -36,29 +35,23 @@ internal class UpdateFolderOperations(private val lockableDatabase: LockableData
     }
 
     fun setIncludeInUnifiedInbox(folderId: Long, includeInUnifiedInbox: Boolean) {
-        lockableDatabase.execute(false) { db ->
-            val contentValues = ContentValues().apply {
-                put("integrate", includeInUnifiedInbox)
-            }
-
-            db.update("folders", contentValues, "id = ?", arrayOf(folderId.toString()))
-        }
+        setBoolean(folderId = folderId, columnName = "integrate", value = includeInUnifiedInbox)
     }
 
-    fun setDisplayClass(folderId: Long, folderClass: FolderClass) {
-        setString(folderId = folderId, columnName = "display_class", value = folderClass.name)
+    fun setHidden(folderId: Long, hidden: Boolean) {
+        setBoolean(folderId = folderId, columnName = "hidden", value = hidden)
     }
 
-    fun setSyncClass(folderId: Long, folderClass: FolderClass) {
-        setString(folderId = folderId, columnName = "poll_class", value = folderClass.name)
+    fun setAutoSyncViaPollEnabled(folderId: Long, enable: Boolean) {
+        setBoolean(folderId = folderId, columnName = "auto_sync_poll", value = enable)
     }
 
-    fun setPushClass(folderId: Long, folderClass: FolderClass) {
-        setString(folderId = folderId, columnName = "push_class", value = folderClass.name)
+    fun setAutoSyncViaPushEnabled(folderId: Long, enable: Boolean) {
+        setBoolean(folderId = folderId, columnName = "auto_sync_push", value = enable)
     }
 
-    fun setNotificationClass(folderId: Long, folderClass: FolderClass) {
-        setString(folderId = folderId, columnName = "notify_class", value = folderClass.name)
+    fun setNotificationEnabled(folderId: Long, enable: Boolean) {
+        setBoolean(folderId = folderId, columnName = "notify", value = enable)
     }
 
     fun setMoreMessages(folderId: Long, moreMessages: MoreMessages) {
@@ -97,6 +90,16 @@ internal class UpdateFolderOperations(private val lockableDatabase: LockableData
                 } else {
                     put(columnName, value)
                 }
+            }
+
+            db.update("folders", contentValues, "id = ?", arrayOf(folderId.toString()))
+        }
+    }
+
+    private fun setBoolean(folderId: Long, columnName: String, value: Boolean) {
+        lockableDatabase.execute(false) { db ->
+            val contentValues = ContentValues().apply {
+                put(columnName, value)
             }
 
             db.update("folders", contentValues, "id = ?", arrayOf(folderId.toString()))

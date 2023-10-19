@@ -1,8 +1,6 @@
 package com.fsck.k9.storage.messages
 
-import com.fsck.k9.Account.FolderMode
 import com.fsck.k9.mail.Flag
-import com.fsck.k9.mail.FolderClass
 import com.fsck.k9.mail.FolderType
 import com.fsck.k9.mail.Header
 import com.fsck.k9.mailstore.CreateFolderInfo
@@ -158,11 +156,11 @@ class K9MessageStore(
     }
 
     override fun <T> getDisplayFolders(
-        displayMode: FolderMode,
+        showHiddenFolders: Boolean,
         outboxFolderId: Long?,
         mapper: FolderMapper<T>,
     ): List<T> {
-        return retrieveFolderOperations.getDisplayFolders(displayMode, outboxFolderId, mapper)
+        return retrieveFolderOperations.getDisplayFolders(showHiddenFolders, outboxFolderId, mapper)
     }
 
     override fun areAllIncludedInUnifiedInbox(folderIds: Collection<Long>): Boolean {
@@ -209,20 +207,20 @@ class K9MessageStore(
         updateFolderOperations.setIncludeInUnifiedInbox(folderId, includeInUnifiedInbox)
     }
 
-    override fun setDisplayClass(folderId: Long, folderClass: FolderClass) {
-        updateFolderOperations.setDisplayClass(folderId, folderClass)
+    override fun setHidden(folderId: Long, hidden: Boolean) {
+        updateFolderOperations.setHidden(folderId, hidden)
     }
 
-    override fun setSyncClass(folderId: Long, folderClass: FolderClass) {
-        updateFolderOperations.setSyncClass(folderId, folderClass)
+    override fun setAutoSyncViaPollEnabled(folderId: Long, enable: Boolean) {
+        updateFolderOperations.setAutoSyncViaPollEnabled(folderId, enable)
     }
 
-    override fun setPushClass(folderId: Long, folderClass: FolderClass) {
-        updateFolderOperations.setPushClass(folderId, folderClass)
+    override fun setAutoSyncViaPushEnabled(folderId: Long, enable: Boolean) {
+        updateFolderOperations.setAutoSyncViaPushEnabled(folderId, enable)
     }
 
-    override fun setNotificationClass(folderId: Long, folderClass: FolderClass) {
-        updateFolderOperations.setNotificationClass(folderId, folderClass)
+    override fun setNotificationEnabled(folderId: Long, enable: Boolean) {
+        updateFolderOperations.setNotificationEnabled(folderId, enable)
     }
 
     override fun hasMoreMessages(folderId: Long): MoreMessages {

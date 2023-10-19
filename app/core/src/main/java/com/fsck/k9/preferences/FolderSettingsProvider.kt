@@ -1,7 +1,6 @@
 package com.fsck.k9.preferences
 
 import com.fsck.k9.Account
-import com.fsck.k9.mail.FolderClass
 import com.fsck.k9.mailstore.FolderRepository
 import com.fsck.k9.mailstore.RemoteFolderDetails
 
@@ -15,10 +14,10 @@ class FolderSettingsProvider(private val folderRepository: FolderRepository) {
     private fun RemoteFolderDetails.containsOnlyDefaultValues(): Boolean {
         return isInTopGroup == getDefaultValue("inTopGroup") &&
             isIntegrate == getDefaultValue("integrate") &&
-            syncClass == getDefaultValue("syncMode") &&
-            displayClass == getDefaultValue("displayMode") &&
-            notifyClass == getDefaultValue("notifyMode") &&
-            pushClass == getDefaultValue("pushMode")
+            isAutoSyncViaPollEnabled == getDefaultValue("syncMode") &&
+            isHidden == getDefaultValue("displayMode") &&
+            isNotificationEnabled == getDefaultValue("notifyMode") &&
+            isAutoSyncViaPushEnabled == getDefaultValue("pushMode")
     }
 
     private fun getDefaultValue(key: String): Any? {
@@ -31,22 +30,22 @@ class FolderSettingsProvider(private val folderRepository: FolderRepository) {
     private fun RemoteFolderDetails.toFolderSettings(): FolderSettings {
         return FolderSettings(
             folder.serverId,
-            isInTopGroup,
             isIntegrate,
-            syncClass,
-            displayClass,
-            notifyClass,
-            pushClass,
+            isHidden,
+            isInTopGroup,
+            isAutoSyncViaPollEnabled,
+            isAutoSyncViaPushEnabled,
+            isNotificationEnabled,
         )
     }
 }
 
 data class FolderSettings(
     val serverId: String,
-    val isInTopGroup: Boolean,
     val isIntegrate: Boolean,
-    val syncClass: FolderClass,
-    val displayClass: FolderClass,
-    val notifyClass: FolderClass,
-    val pushClass: FolderClass,
+    val isHidden: Boolean,
+    val isInTopGroup: Boolean,
+    val isAutoSyncViaPollEnabled: Boolean,
+    val isAutoSyncViaPushEnabled: Boolean,
+    val isNotificationEnabled: Boolean,
 )

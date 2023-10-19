@@ -56,7 +56,6 @@ import com.fsck.k9.mail.AuthenticationFailedException;
 import com.fsck.k9.mail.CertificateValidationException;
 import com.fsck.k9.mail.FetchProfile;
 import com.fsck.k9.mail.Flag;
-import com.fsck.k9.mail.FolderClass;
 import com.fsck.k9.mail.Message;
 import com.fsck.k9.mail.MessageDownloadState;
 import com.fsck.k9.mail.MessagingException;
@@ -2283,26 +2282,16 @@ public class MessagingController {
         refreshFolderListIfStale(account);
 
         try {
-            Account.FolderMode aDisplayMode = account.getFolderDisplayMode();
-            Account.FolderMode aSyncMode = account.getFolderSyncMode();
-
             LocalStore localStore = localStoreProvider.getInstance(account);
             for (final LocalFolder folder : localStore.getPersonalNamespaces(false)) {
                 folder.open();
 
-                FolderClass fDisplayClass = folder.getDisplayClass();
-                FolderClass fSyncClass = folder.getSyncClass();
+                boolean isFolderHidden = folder.getHidden();
+                boolean isAutoSyncViaPollEnabled = folder.getAutoSyncViaPollEnabled();
 
-                if (LocalFolder.isModeMismatch(aDisplayMode, fDisplayClass)) {
-                    // Never sync a folder that isn't displayed
-                    continue;
+                if (!isFolderHidden && isAutoSyncViaPollEnabled) {
+                    synchronizeFolder(account, folder, ignoreLastCheckedTime, notify, listener, notificationState);
                 }
-
-                if (LocalFolder.isModeMismatch(aSyncMode, fSyncClass)) {
-                    // Do not sync folders in the wrong class
-                    continue;
-                }
-                synchronizeFolder(account, folder, ignoreLastCheckedTime, notify, listener, notificationState);
             }
         } catch (MessagingException e) {
             Timber.e(e, "Unable to synchronize account %s", account);

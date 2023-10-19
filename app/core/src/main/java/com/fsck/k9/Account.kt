@@ -83,10 +83,6 @@ class Account(override val uuid: String) : BaseAccount {
 
     @get:Synchronized
     @set:Synchronized
-    var folderNotifyNewMailMode = FolderMode.ALL
-
-    @get:Synchronized
-    @set:Synchronized
     var isNotifySelfNewMail = false
 
     @get:Synchronized
@@ -179,19 +175,7 @@ class Account(override val uuid: String) : BaseAccount {
 
     @get:Synchronized
     @set:Synchronized
-    var folderDisplayMode = FolderMode.NOT_SECOND_CLASS
-
-    @get:Synchronized
-    @set:Synchronized
-    var folderSyncMode = FolderMode.FIRST_CLASS
-
-    @get:Synchronized
-    @set:Synchronized
-    var folderPushMode = FolderMode.NONE
-
-    @get:Synchronized
-    @set:Synchronized
-    var folderTargetMode = FolderMode.NOT_SECOND_CLASS
+    var isPushEnabled = false
 
     @get:Synchronized
     @set:Synchronized
@@ -496,15 +480,6 @@ class Account(override val uuid: String) : BaseAccount {
     }
 
     @Synchronized
-    fun updateFolderSyncMode(syncMode: FolderMode): Boolean {
-        val oldSyncMode = folderSyncMode
-        folderSyncMode = syncMode
-
-        return (oldSyncMode == FolderMode.NONE && syncMode != FolderMode.NONE) ||
-            (oldSyncMode != FolderMode.NONE && syncMode == FolderMode.NONE)
-    }
-
-    @Synchronized
     fun isSortAscending(sortType: SortType): Boolean {
         return sortAscending.getOrPut(sortType) { sortType.isDefaultAscending }
     }
@@ -610,14 +585,6 @@ class Account(override val uuid: String) : BaseAccount {
 
     override fun hashCode(): Int {
         return uuid.hashCode()
-    }
-
-    enum class FolderMode {
-        NONE,
-        ALL,
-        FIRST_CLASS,
-        FIRST_AND_SECOND_CLASS,
-        NOT_SECOND_CLASS,
     }
 
     enum class SpecialFolderSelection {

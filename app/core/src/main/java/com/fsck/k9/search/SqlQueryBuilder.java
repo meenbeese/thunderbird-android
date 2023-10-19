@@ -122,7 +122,7 @@ public class SqlQueryBuilder {
                 columnName = "flagged";
                 break;
             }
-            case DISPLAY_CLASS: {
+            case FOLDER_HIDDEN: {
                 columnName = "display_class";
                 break;
             }

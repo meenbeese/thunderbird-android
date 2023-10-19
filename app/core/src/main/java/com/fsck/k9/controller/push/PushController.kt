@@ -1,7 +1,6 @@
 package com.fsck.k9.controller.push
 
 import com.fsck.k9.Account
-import com.fsck.k9.Account.FolderMode
 import com.fsck.k9.Preferences
 import com.fsck.k9.backend.BackendManager
 import com.fsck.k9.network.ConnectivityChangeListener
@@ -75,7 +74,7 @@ class PushController internal constructor(
 
         coroutineScope.launch(coroutineDispatcher) {
             for (account in preferences.accounts) {
-                account.folderPushMode = FolderMode.NONE
+                account.isPushEnabled = false
                 preferences.saveAccount(account)
             }
         }
@@ -211,7 +210,7 @@ class PushController internal constructor(
 
     private fun getPushAccounts(): List<Account> {
         return preferences.accounts.filter { account ->
-            account.folderPushMode != FolderMode.NONE && backendManager.getBackend(account).isPushCapable
+            account.isPushEnabled && backendManager.getBackend(account).isPushCapable
         }
     }
 

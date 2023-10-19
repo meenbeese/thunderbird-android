@@ -4,7 +4,6 @@ package com.fsck.k9.storage;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.fsck.k9.K9;
-import com.fsck.k9.mail.FolderClass;
 import com.fsck.k9.mailstore.LockableDatabase.SchemaDefinition;
 import com.fsck.k9.mailstore.MigrationsHelper;
 import com.fsck.k9.storage.migrations.Migrations;
@@ -89,12 +88,12 @@ class StoreSchemaDefinition implements SchemaDefinition {
                 "visible_limit INTEGER, " +
                 "status TEXT, " +
                 "flagged_count INTEGER default 0, " +
-                "integrate INTEGER, " +
-                "top_group INTEGER, " +
-                "poll_class TEXT, " +
-                "push_class TEXT, " +
-                "display_class TEXT, " +
-                "notify_class TEXT default '"+ FolderClass.INHERITED.name() + "', " +
+                "integrate INTEGER DEFAULT 0, " +
+                "hidden INTEGER DEFAULT 0, " +
+                "top_group INTEGER DEFAULT 0, " +
+                "auto_sync_poll INTEGER DEFAULT 0, " +
+                "auto_sync_push INTEGER DEFAULT 0, " +
+                "notify INTEGER DEFAULT 0, " +
                 "more_messages TEXT default \"unknown\", " +
                 "server_id TEXT, " +
                 "local_only INTEGER, " +

@@ -1,8 +1,6 @@
 package com.fsck.k9.mailstore
 
-import com.fsck.k9.Account.FolderMode
 import com.fsck.k9.mail.Flag
-import com.fsck.k9.mail.FolderClass
 import com.fsck.k9.mail.FolderType
 import com.fsck.k9.mail.Header
 import com.fsck.k9.search.ConditionsTreeNode
@@ -201,11 +199,11 @@ interface MessageStore {
     fun <T> getFolders(excludeLocalOnly: Boolean, mapper: FolderMapper<T>): List<T>
 
     /**
-     * Retrieve folders for the given display mode along with their unread count.
+     * Retrieve visible folders along with their unread count.
      *
      * For the Outbox the total number of messages will be returned.
      */
-    fun <T> getDisplayFolders(displayMode: FolderMode, outboxFolderId: Long?, mapper: FolderMapper<T>): List<T>
+    fun <T> getDisplayFolders(showHiddenFolders: Boolean, outboxFolderId: Long?, mapper: FolderMapper<T>): List<T>
 
     /**
      * Check if all given folders are included in the Unified Inbox.
@@ -260,22 +258,22 @@ interface MessageStore {
     /**
      * Update the display class of a folder.
      */
-    fun setDisplayClass(folderId: Long, folderClass: FolderClass)
+    fun setHidden(folderId: Long, hidden: Boolean)
 
     /**
      * Update the sync class of a folder.
      */
-    fun setSyncClass(folderId: Long, folderClass: FolderClass)
+    fun setAutoSyncViaPollEnabled(folderId: Long, enable: Boolean)
 
     /**
      * Update the push class of a folder.
      */
-    fun setPushClass(folderId: Long, folderClass: FolderClass)
+    fun setAutoSyncViaPushEnabled(folderId: Long, enable: Boolean)
 
     /**
      * Update the notification class of a folder.
      */
-    fun setNotificationClass(folderId: Long, folderClass: FolderClass)
+    fun setNotificationEnabled(folderId: Long, enable: Boolean)
 
     /**
      * Get the 'more messages' state of a folder.

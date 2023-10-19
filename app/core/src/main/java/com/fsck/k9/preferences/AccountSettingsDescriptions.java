@@ -13,7 +13,6 @@ import android.content.Context;
 import com.fsck.k9.Account;
 import com.fsck.k9.Account.DeletePolicy;
 import com.fsck.k9.Account.Expunge;
-import com.fsck.k9.Account.FolderMode;
 import com.fsck.k9.Account.MessageFormat;
 import com.fsck.k9.Account.QuoteStyle;
 import com.fsck.k9.Account.Searchable;
@@ -96,19 +95,19 @@ public class AccountSettingsDescriptions {
                 new V(1, new StringResourceSetting(Expunge.EXPUNGE_IMMEDIATELY.name(),
                         R.array.expunge_policy_values))
         ));
-        s.put("folderDisplayMode", Settings.versions(
-                new V(1, new EnumSetting<>(FolderMode.class, FolderMode.NOT_SECOND_CLASS))
-        ));
-        s.put("folderPushMode", Settings.versions(
-                new V(1, new EnumSetting<>(FolderMode.class, FolderMode.FIRST_CLASS)),
-                new V(72, new EnumSetting<>(FolderMode.class, FolderMode.NONE))
-        ));
-        s.put("folderSyncMode", Settings.versions(
-                new V(1, new EnumSetting<>(FolderMode.class, FolderMode.FIRST_CLASS))
-        ));
-        s.put("folderTargetMode", Settings.versions(
-                new V(1, new EnumSetting<>(FolderMode.class, FolderMode.NOT_SECOND_CLASS))
-        ));
+//        s.put("folderDisplayMode", Settings.versions(
+//                new V(1, new EnumSetting<>(FolderMode.class, FolderMode.NOT_SECOND_CLASS))
+//        ));
+//        s.put("folderPushMode", Settings.versions(
+//                new V(1, new EnumSetting<>(FolderMode.class, FolderMode.FIRST_CLASS)),
+//                new V(72, new EnumSetting<>(FolderMode.class, FolderMode.NONE))
+//        ));
+//        s.put("folderSyncMode", Settings.versions(
+//                new V(1, new EnumSetting<>(FolderMode.class, FolderMode.FIRST_CLASS))
+//        ));
+//        s.put("folderTargetMode", Settings.versions(
+//                new V(1, new EnumSetting<>(FolderMode.class, FolderMode.NOT_SECOND_CLASS))
+//        ));
         s.put("idleRefreshMinutes", Settings.versions(
                 new V(1, new IntegerArraySetting(24, new int[] { 1, 2, 3, 6, 12, 24, 36, 48, 60 })),
                 new V(74, new IntegerResourceSetting(24, R.array.idle_refresh_period_values))
@@ -154,9 +153,9 @@ public class AccountSettingsDescriptions {
         s.put("notifyNewMail", Settings.versions(
                 new V(1, new BooleanSetting(false))
         ));
-        s.put("folderNotifyNewMailMode", Settings.versions(
-                new V(34, new EnumSetting<>(FolderMode.class, FolderMode.ALL))
-        ));
+//        s.put("folderNotifyNewMailMode", Settings.versions(
+//                new V(34, new EnumSetting<>(FolderMode.class, FolderMode.ALL))
+//        ));
         s.put("notifySelfNewMail", Settings.versions(
                 new V(1, new BooleanSetting(true))
         ));

@@ -3,8 +3,6 @@ package com.fsck.k9.storage.messages
 import android.database.Cursor
 import androidx.core.database.getLongOrNull
 import app.k9mail.core.android.common.database.map
-import com.fsck.k9.Account.FolderMode
-import com.fsck.k9.mail.FolderClass
 import com.fsck.k9.mail.FolderType
 import com.fsck.k9.mailstore.FolderDetailsAccessor
 import com.fsck.k9.mailstore.FolderMapper
@@ -65,10 +63,10 @@ internal class RetrieveFolderOperations(private val lockableDatabase: LockableDa
         }
     }
 
-    fun <T> getDisplayFolders(displayMode: FolderMode, outboxFolderId: Long?, mapper: FolderMapper<T>): List<T> {
+    fun <T> getDisplayFolders(showHiddenFolders: Boolean, outboxFolderId: Long?, mapper: FolderMapper<T>): List<T> {
         return lockableDatabase.execute(false) { db ->
-            val displayModeSelection = getDisplayModeSelection(displayMode)
             val outboxFolderIdOrZero = outboxFolderId ?: 0
+            val hiddenFolderSelection = if (showHiddenFolders) "" else "WHERE hidden = 0"
 
             val query =
                 """
@@ -86,7 +84,7 @@ SELECT ${FOLDER_COLUMNS.joinToString()}, (
     AND messages.flagged = 1
 )
 FROM folders
-$displayModeSelection
+$hiddenFolderSelection
                 """
 
             db.rawQuery(query, arrayOf(outboxFolderIdOrZero.toString())).use { cursor ->
@@ -94,26 +92,6 @@ $displayModeSelection
                 cursor.map {
                     mapper.map(cursorFolderAccessor)
                 }
-            }
-        }
-    }
-
-    private fun getDisplayModeSelection(displayMode: FolderMode): String {
-        return when (displayMode) {
-            FolderMode.ALL -> {
-                ""
-            }
-            FolderMode.FIRST_CLASS -> {
-                "WHERE display_class = '${FolderClass.FIRST_CLASS.name}'"
-            }
-            FolderMode.FIRST_AND_SECOND_CLASS -> {
-                "WHERE display_class IN ('${FolderClass.FIRST_CLASS.name}', '${FolderClass.SECOND_CLASS.name}')"
-            }
-            FolderMode.NOT_SECOND_CLASS -> {
-                "WHERE display_class != '${FolderClass.SECOND_CLASS.name}'"
-            }
-            FolderMode.NONE -> {
-                throw AssertionError("Invalid folder display mode: $displayMode")
             }
         }
     }
@@ -230,17 +208,17 @@ private class CursorFolderAccessor(val cursor: Cursor) : FolderDetailsAccessor {
     override val isIntegrate: Boolean
         get() = cursor.getInt(6) == 1
 
-    override val syncClass: FolderClass
-        get() = cursor.getString(7).toFolderClass(FolderClass.INHERITED)
+    override val isAutoSyncViaPollEnabled: Boolean
+        get() = cursor.getInt(7) == 1
 
-    override val displayClass: FolderClass
-        get() = cursor.getString(8).toFolderClass(FolderClass.NO_CLASS)
+    override val isHidden: Boolean
+        get() = cursor.getInt(8) == 1
 
-    override val notifyClass: FolderClass
-        get() = cursor.getString(9).toFolderClass(FolderClass.INHERITED)
+    override val isNotificationEnabled: Boolean
+        get() = cursor.getInt(9) == 1
 
-    override val pushClass: FolderClass
-        get() = cursor.getString(10).toFolderClass(FolderClass.SECOND_CLASS)
+    override val isAutoSyncViaPushEnabled: Boolean
+        get() = cursor.getInt(10) == 1
 
     override val visibleLimit: Int
         get() = cursor.getInt(11)
@@ -262,10 +240,6 @@ private class CursorFolderAccessor(val cursor: Cursor) : FolderDetailsAccessor {
     }
 }
 
-private fun String?.toFolderClass(defaultValue: FolderClass): FolderClass {
-    return if (this == null) defaultValue else FolderClass.valueOf(this)
-}
-
 private val FOLDER_COLUMNS = arrayOf(
     "id",
     "name",
@@ -274,10 +248,10 @@ private val FOLDER_COLUMNS = arrayOf(
     "local_only",
     "top_group",
     "integrate",
-    "poll_class",
-    "display_class",
-    "notify_class",
-    "push_class",
+    "auto_sync_poll",
+    "hidden",
+    "notify",
+    "auto_sync_push",
     "visible_limit",
     "more_messages",
     "last_updated",

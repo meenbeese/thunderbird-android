@@ -7,7 +7,6 @@ import com.fsck.k9.Account.Companion.NO_OPENPGP_KEY
 import com.fsck.k9.Account.Companion.UNASSIGNED_ACCOUNT_NUMBER
 import com.fsck.k9.Account.DeletePolicy
 import com.fsck.k9.Account.Expunge
-import com.fsck.k9.Account.FolderMode
 import com.fsck.k9.Account.MessageFormat
 import com.fsck.k9.Account.QuoteStyle
 import com.fsck.k9.Account.Searchable
@@ -55,11 +54,6 @@ class AccountPreferenceSerializer(
             }
             isNotifyNewMail = storage.getBoolean("$accountUuid.notifyNewMail", false)
 
-            folderNotifyNewMailMode = getEnumStringPref<FolderMode>(
-                storage,
-                "$accountUuid.folderNotifyNewMailMode",
-                FolderMode.ALL,
-            )
             isNotifySelfNewMail = storage.getBoolean("$accountUuid.notifySelfNewMail", true)
             isNotifyContactsMailOnly = storage.getBoolean("$accountUuid.notifyContactsMailOnly", false)
             isIgnoreChatMessages = storage.getBoolean("$accountUuid.ignoreChatMessages", false)
@@ -167,16 +161,7 @@ class AccountPreferenceSerializer(
                 )
             }
 
-            folderDisplayMode =
-                getEnumStringPref<FolderMode>(storage, "$accountUuid.folderDisplayMode", FolderMode.NOT_SECOND_CLASS)
-
-            folderSyncMode =
-                getEnumStringPref<FolderMode>(storage, "$accountUuid.folderSyncMode", FolderMode.FIRST_CLASS)
-
-            folderPushMode = getEnumStringPref<FolderMode>(storage, "$accountUuid.folderPushMode", FolderMode.NONE)
-
-            folderTargetMode =
-                getEnumStringPref<FolderMode>(storage, "$accountUuid.folderTargetMode", FolderMode.NOT_SECOND_CLASS)
+            isPushEnabled = storage.getBoolean("$accountUuid.isPushEnabled", false)
 
             searchableFolders = getEnumStringPref<Searchable>(storage, "$accountUuid.searchableFolders", Searchable.ALL)
 
@@ -282,7 +267,6 @@ class AccountPreferenceSerializer(
             editor.putInt("$accountUuid.idleRefreshMinutes", idleRefreshMinutes)
             editor.putInt("$accountUuid.displayCount", displayCount)
             editor.putBoolean("$accountUuid.notifyNewMail", isNotifyNewMail)
-            editor.putString("$accountUuid.folderNotifyNewMailMode", folderNotifyNewMailMode.name)
             editor.putBoolean("$accountUuid.notifySelfNewMail", isNotifySelfNewMail)
             editor.putBoolean("$accountUuid.notifyContactsMailOnly", isNotifyContactsMailOnly)
             editor.putBoolean("$accountUuid.ignoreChatMessages", isIgnoreChatMessages)
@@ -313,10 +297,7 @@ class AccountPreferenceSerializer(
             editor.putString("$accountUuid.sortTypeEnum", sortType.name)
             editor.putBoolean("$accountUuid.sortAscending", isSortAscending(sortType))
             editor.putString("$accountUuid.showPicturesEnum", showPictures.name)
-            editor.putString("$accountUuid.folderDisplayMode", folderDisplayMode.name)
-            editor.putString("$accountUuid.folderSyncMode", folderSyncMode.name)
-            editor.putString("$accountUuid.folderPushMode", folderPushMode.name)
-            editor.putString("$accountUuid.folderTargetMode", folderTargetMode.name)
+            editor.putBoolean("$accountUuid.isPushEnabled", isPushEnabled)
             editor.putBoolean("$accountUuid.signatureBeforeQuotedText", isSignatureBeforeQuotedText)
             editor.putString("$accountUuid.expungePolicy", expungePolicy.name)
             editor.putBoolean("$accountUuid.syncRemoteDeletions", isSyncRemoteDeletions)
@@ -577,16 +558,12 @@ class AccountPreferenceSerializer(
             displayCount = K9.DEFAULT_VISIBLE_LIMIT
             accountNumber = UNASSIGNED_ACCOUNT_NUMBER
             isNotifyNewMail = true
-            folderNotifyNewMailMode = FolderMode.ALL
             isNotifySync = false
             isNotifySelfNewMail = true
             isNotifyContactsMailOnly = false
             isIgnoreChatMessages = false
             messagesNotificationChannelVersion = 0
-            folderDisplayMode = FolderMode.NOT_SECOND_CLASS
-            folderSyncMode = FolderMode.FIRST_CLASS
-            folderPushMode = FolderMode.NONE
-            folderTargetMode = FolderMode.NOT_SECOND_CLASS
+            isPushEnabled = false
             sortType = DEFAULT_SORT_TYPE
             setSortAscending(DEFAULT_SORT_TYPE, DEFAULT_SORT_ASCENDING)
             showPictures = ShowPictures.NEVER

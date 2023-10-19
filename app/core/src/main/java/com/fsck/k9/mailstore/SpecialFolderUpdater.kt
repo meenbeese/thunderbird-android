@@ -4,7 +4,6 @@ import app.k9mail.core.common.mail.Protocols
 import com.fsck.k9.Account
 import com.fsck.k9.Account.SpecialFolderSelection
 import com.fsck.k9.Preferences
-import com.fsck.k9.mail.FolderClass
 
 /**
  * Updates special folders in [Account] if they are marked as [SpecialFolderSelection.AUTOMATIC] or if they are marked
@@ -47,10 +46,10 @@ class SpecialFolderUpdater(
 
         if (newInboxId != null) {
             folderRepository.setIncludeInUnifiedInbox(account, newInboxId, true)
-            folderRepository.setDisplayClass(account, newInboxId, FolderClass.FIRST_CLASS)
-            folderRepository.setSyncClass(account, newInboxId, FolderClass.FIRST_CLASS)
-            folderRepository.setPushClass(account, newInboxId, FolderClass.FIRST_CLASS)
-            folderRepository.setNotificationClass(account, newInboxId, FolderClass.FIRST_CLASS)
+            folderRepository.setHidden(account, newInboxId, false)
+            folderRepository.setAutoSyncViaPollEnabled(account, newInboxId, true)
+            folderRepository.setAutoSyncViaPushEnabled(account, newInboxId, true)
+            folderRepository.setNotificationEnabled(account, newInboxId, true)
         }
     }
 
@@ -117,8 +116,8 @@ class SpecialFolderUpdater(
         }
 
         if (folderId != null) {
-            folderRepository.setDisplayClass(account, folderId, FolderClass.FIRST_CLASS)
-            folderRepository.setSyncClass(account, folderId, FolderClass.NO_CLASS)
+            folderRepository.setHidden(account, folderId, false)
+            folderRepository.setAutoSyncViaPollEnabled(account, folderId, false)
         }
     }
 

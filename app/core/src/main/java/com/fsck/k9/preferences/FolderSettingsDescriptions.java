@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import com.fsck.k9.mail.FolderClass;
 import com.fsck.k9.preferences.Settings.BooleanSetting;
 import com.fsck.k9.preferences.Settings.EnumSetting;
 import com.fsck.k9.preferences.Settings.SettingsDescription;
@@ -28,19 +27,19 @@ class FolderSettingsDescriptions {
          * and use that for whatever you add here.
          */
 
-        s.put("displayMode", Settings.versions(
-                new V(1, new EnumSetting<>(FolderClass.class, FolderClass.NO_CLASS))
-        ));
-        s.put("notifyMode", Settings.versions(
-                new V(34, new EnumSetting<>(FolderClass.class, FolderClass.INHERITED))
-        ));
-        s.put("syncMode", Settings.versions(
-                new V(1, new EnumSetting<>(FolderClass.class, FolderClass.INHERITED))
-        ));
-        s.put("pushMode", Settings.versions(
-                new V(1, new EnumSetting<>(FolderClass.class, FolderClass.INHERITED)),
-                new V(66, new EnumSetting<>(FolderClass.class, FolderClass.SECOND_CLASS))
-        ));
+//        s.put("displayMode", Settings.versions(
+//                new V(1, new EnumSetting<>(FolderClass.class, FolderClass.NO_CLASS))
+//        ));
+//        s.put("notifyMode", Settings.versions(
+//                new V(34, new EnumSetting<>(FolderClass.class, FolderClass.INHERITED))
+//        ));
+//        s.put("syncMode", Settings.versions(
+//                new V(1, new EnumSetting<>(FolderClass.class, FolderClass.INHERITED))
+//        ));
+//        s.put("pushMode", Settings.versions(
+//                new V(1, new EnumSetting<>(FolderClass.class, FolderClass.INHERITED)),
+//                new V(66, new EnumSetting<>(FolderClass.class, FolderClass.SECOND_CLASS))
+//        ));
         s.put("inTopGroup", Settings.versions(
                 new V(1, new BooleanSetting(false))
         ));

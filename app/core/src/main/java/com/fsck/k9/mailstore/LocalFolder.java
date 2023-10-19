@@ -18,7 +18,6 @@ import com.fsck.k9.mail.BodyPart;
 import com.fsck.k9.mail.BoundaryGenerator;
 import com.fsck.k9.mail.FetchProfile;
 import com.fsck.k9.mail.Flag;
-import com.fsck.k9.mail.FolderClass;
 import com.fsck.k9.mail.FolderType;
 import com.fsck.k9.mail.Message;
 import com.fsck.k9.mail.MessageRetrievalListener;
@@ -74,10 +73,10 @@ public class LocalFolder {
     private long databaseId = -1L;
     private int visibleLimit = -1;
 
-    private FolderClass displayClass = FolderClass.NO_CLASS;
-    private FolderClass syncClass = FolderClass.INHERITED;
-    private FolderClass pushClass = FolderClass.SECOND_CLASS;
-    private FolderClass notifyClass = FolderClass.INHERITED;
+    private boolean hidden = false;
+    private boolean autoSyncViaPollEnabled = false;
+    private boolean autoSyncViaPushEnabled = false;
+    private boolean notificationEnabled = false;
 
     private boolean isInTopGroup = false;
     private boolean isIntegrate = false;
@@ -173,15 +172,10 @@ public class LocalFolder {
         lastChecked = cursor.getLong(LocalStore.FOLDER_LAST_CHECKED_INDEX);
         isInTopGroup = cursor.getInt(LocalStore.FOLDER_TOP_GROUP_INDEX) == 1;
         isIntegrate = cursor.getInt(LocalStore.FOLDER_INTEGRATE_INDEX) == 1;
-        String noClass = FolderClass.NO_CLASS.toString();
-        String displayClass = cursor.getString(LocalStore.FOLDER_DISPLAY_CLASS_INDEX);
-        this.displayClass = FolderClass.valueOf((displayClass == null) ? noClass : displayClass);
-        String notifyClass = cursor.getString(LocalStore.FOLDER_NOTIFY_CLASS_INDEX);
-        this.notifyClass = FolderClass.valueOf((notifyClass == null) ? noClass : notifyClass);
-        String pushClass = cursor.getString(LocalStore.FOLDER_PUSH_CLASS_INDEX);
-        this.pushClass = FolderClass.valueOf((pushClass == null) ? noClass : pushClass);
-        String syncClass = cursor.getString(LocalStore.FOLDER_SYNC_CLASS_INDEX);
-        this.syncClass = FolderClass.valueOf((syncClass == null) ? noClass : syncClass);
+        this.hidden = cursor.getInt(LocalStore.FOLDER_HIDDEN_INDEX) == 1;
+        this.notificationEnabled = cursor.getInt(LocalStore.FOLDER_NOTIFICATION_ENABLED_INDEX) == 1;
+        this.autoSyncViaPushEnabled = cursor.getInt(LocalStore.FOLDER_AUTO_SYNC_POLL_INDEX) == 1;
+        this.autoSyncViaPollEnabled = cursor.getInt(LocalStore.FOLDER_AUTO_SYNC_PUSH_INDEX) == 1;
         String moreMessagesValue = cursor.getString(LocalStore.MORE_MESSAGES_INDEX);
         moreMessages = MoreMessages.fromDatabaseName(moreMessagesValue);
         name = cursor.getString(LocalStore.FOLDER_NAME_INDEX);
@@ -299,40 +293,40 @@ public class LocalFolder {
         });
     }
 
-    public FolderClass getDisplayClass() {
-        return displayClass;
+    public boolean getHidden() {
+        return hidden;
     }
 
-    public FolderClass getSyncClass() {
-        return (FolderClass.INHERITED == syncClass) ? getDisplayClass() : syncClass;
+    public boolean getAutoSyncViaPollEnabled() {
+        return autoSyncViaPollEnabled;
     }
 
-    public FolderClass getNotifyClass() {
-        return (FolderClass.INHERITED == notifyClass) ? getPushClass() : notifyClass;
+    public boolean getNotificationEnabled() {
+        return notificationEnabled;
     }
 
-    public FolderClass getPushClass() {
-        return (FolderClass.INHERITED == pushClass) ? getSyncClass() : pushClass;
+    public boolean getAutoSyncViaPushEnabled() {
+        return autoSyncViaPushEnabled;
     }
 
-    public void setDisplayClass(FolderClass displayClass) throws MessagingException {
-        this.displayClass = displayClass;
-        updateFolderColumn("display_class", this.displayClass.name());
+    public void setHidden(boolean hidden) throws MessagingException {
+        this.hidden = hidden;
+        updateFolderColumn("hidden", hidden);
     }
 
-    public void setSyncClass(FolderClass syncClass) throws MessagingException {
-        this.syncClass = syncClass;
-        updateFolderColumn("poll_class", this.syncClass.name());
+    public void setAutoSyncViaPollEnabled(boolean enable) throws MessagingException {
+        this.autoSyncViaPollEnabled = enable;
+        updateFolderColumn("auto_sync_poll", enable);
     }
 
-    public void setPushClass(FolderClass pushClass) throws MessagingException {
-        this.pushClass = pushClass;
-        updateFolderColumn("push_class", this.pushClass.name());
+    public void setAutoSyncViaPushEnabled(boolean enable) throws MessagingException {
+        this.autoSyncViaPushEnabled = enable;
+        updateFolderColumn("auto_sync_push", enable);
     }
 
-    public void setNotifyClass(FolderClass notifyClass) throws MessagingException {
-        this.notifyClass = notifyClass;
-        updateFolderColumn("notify_class", this.notifyClass.name());
+    public void setNotificationEnabled(boolean enable) throws MessagingException {
+        this.notificationEnabled = enable;
+        updateFolderColumn("notify", enable);
     }
 
     public boolean isIntegrate() {
@@ -1245,16 +1239,5 @@ public class LocalFolder {
         static final int IN_DATABASE = 1;
         static final int ON_DISK = 2;
         static final int CHILD_PART_CONTAINS_DATA = 3;
-    }
-
-    public static boolean isModeMismatch(Account.FolderMode aMode, FolderClass fMode) {
-        return aMode == Account.FolderMode.NONE
-                || (aMode == Account.FolderMode.FIRST_CLASS &&
-                fMode != FolderClass.FIRST_CLASS)
-                || (aMode == Account.FolderMode.FIRST_AND_SECOND_CLASS &&
-                fMode != FolderClass.FIRST_CLASS &&
-                fMode != FolderClass.SECOND_CLASS)
-                || (aMode == Account.FolderMode.NOT_SECOND_CLASS &&
-                fMode == FolderClass.SECOND_CLASS);
     }
 }

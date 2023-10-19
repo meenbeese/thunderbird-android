@@ -80,12 +80,12 @@ internal fun createFolderSettingsProvider(): FolderSettingsProvider {
         on { getFolderSettings(any()) } doReturn
             FolderSettings(
                 visibleLimit = 25,
-                displayClass = FolderClass.NO_CLASS,
-                syncClass = FolderClass.INHERITED,
-                notifyClass = FolderClass.INHERITED,
-                pushClass = FolderClass.SECOND_CLASS,
-                inTopGroup = false,
                 integrate = false,
+                isHidden = FolderClass.NO_CLASS,
+                inTopGroup = false,
+                isAutoSyncViaPollEnabled = FolderClass.INHERITED,
+                isAutoSyncViaPushEnabled = FolderClass.SECOND_CLASS,
+                isNotificationEnabled = FolderClass.INHERITED,
             )
     }
 }

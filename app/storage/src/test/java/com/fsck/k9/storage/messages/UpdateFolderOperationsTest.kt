@@ -47,12 +47,12 @@ class UpdateFolderOperationsTest : RobolectricTest() {
                     type = FolderType.REGULAR,
                     isLocalOnly = false,
                 ),
-                isInTopGroup = true,
                 isIntegrate = true,
-                displayClass = FolderClass.FIRST_CLASS,
-                syncClass = FolderClass.FIRST_CLASS,
-                notifyClass = FolderClass.FIRST_CLASS,
-                pushClass = FolderClass.FIRST_CLASS,
+                isHidden = FolderClass.FIRST_CLASS,
+                isInTopGroup = true,
+                isAutoSyncViaPollEnabled = FolderClass.FIRST_CLASS,
+                isAutoSyncViaPushEnabled = FolderClass.FIRST_CLASS,
+                isNotificationEnabled = FolderClass.FIRST_CLASS,
             ),
         )
 
@@ -81,7 +81,7 @@ class UpdateFolderOperationsTest : RobolectricTest() {
     fun `update display class`() {
         val folderId = sqliteDatabase.createFolder(displayClass = "FIRST_CLASS")
 
-        updateFolderOperations.setDisplayClass(folderId = folderId, folderClass = FolderClass.SECOND_CLASS)
+        updateFolderOperations.setHidden(folderId = folderId, folderClass = FolderClass.SECOND_CLASS)
 
         val folder = sqliteDatabase.readFolders().first()
         assertThat(folder.id).isEqualTo(folderId)
@@ -92,7 +92,7 @@ class UpdateFolderOperationsTest : RobolectricTest() {
     fun `update sync class`() {
         val folderId = sqliteDatabase.createFolder(syncClass = "FIRST_CLASS")
 
-        updateFolderOperations.setSyncClass(folderId = folderId, folderClass = FolderClass.NO_CLASS)
+        updateFolderOperations.setAutoSyncViaPollEnabled(folderId = folderId, enable = FolderClass.NO_CLASS)
 
         val folder = sqliteDatabase.readFolders().first()
         assertThat(folder.id).isEqualTo(folderId)
@@ -103,7 +103,7 @@ class UpdateFolderOperationsTest : RobolectricTest() {
     fun `update push class`() {
         val folderId = sqliteDatabase.createFolder(pushClass = "FIRST_CLASS")
 
-        updateFolderOperations.setPushClass(folderId = folderId, folderClass = FolderClass.NO_CLASS)
+        updateFolderOperations.setAutoSyncViaPushEnabled(folderId = folderId, enable = FolderClass.NO_CLASS)
 
         val folder = sqliteDatabase.readFolders().first()
         assertThat(folder.id).isEqualTo(folderId)
@@ -114,7 +114,7 @@ class UpdateFolderOperationsTest : RobolectricTest() {
     fun `update notification class`() {
         val folderId = sqliteDatabase.createFolder(syncClass = "FIRST_CLASS")
 
-        updateFolderOperations.setNotificationClass(folderId = folderId, folderClass = FolderClass.INHERITED)
+        updateFolderOperations.setNotificationEnabled(folderId = folderId, enable = FolderClass.INHERITED)
 
         val folder = sqliteDatabase.readFolders().first()
         assertThat(folder.id).isEqualTo(folderId)

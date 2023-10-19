@@ -8,7 +8,6 @@ import com.fsck.k9.mail.Flag
 import com.fsck.k9.mail.K9MailLib
 import com.fsck.k9.mail.Message
 import com.fsck.k9.mailstore.LocalFolder
-import com.fsck.k9.mailstore.LocalFolder.isModeMismatch
 import com.fsck.k9.mailstore.LocalMessage
 import timber.log.Timber
 
@@ -57,13 +56,13 @@ class K9NotificationStrategy(
             }
         }
 
-        if (isModeMismatch(account.folderDisplayMode, localFolder.displayClass)) {
+        if (localFolder.hidden) {
             Timber.v("No notification: Message is in folder not being displayed")
             return false
         }
 
-        if (isModeMismatch(account.folderNotifyNewMailMode, localFolder.notifyClass)) {
-            Timber.v("No notification: Notifications are disabled for this folder class")
+        if (!localFolder.notificationEnabled) {
+            Timber.v("No notification: Notifications are disabled for this folder")
             return false
         }
 

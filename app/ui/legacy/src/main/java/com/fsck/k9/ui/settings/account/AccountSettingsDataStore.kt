@@ -44,6 +44,7 @@ class AccountSettingsDataStore(
             "upload_sent_messages" -> account.isUploadSentMessages
             "ignore_chat_messages" -> account.isIgnoreChatMessages
             "subscribed_folders_only" -> account.isSubscribedFoldersOnly
+            "folder_push_mode" -> account.isPushEnabled
             else -> defValue
         }
     }
@@ -69,6 +70,7 @@ class AccountSettingsDataStore(
             "upload_sent_messages" -> account.isUploadSentMessages = value
             "ignore_chat_messages" -> account.isIgnoreChatMessages = value
             "subscribed_folders_only" -> updateSubscribedFoldersOnly(value)
+            "folder_push_mode" -> account.isPushEnabled = value
             else -> return
         }
 
@@ -115,8 +117,6 @@ class AccountSettingsDataStore(
             "account_message_age" -> account.maximumPolledMessageAge.toString()
             "account_autodownload_size" -> account.maximumAutoDownloadMessageSize.toString()
             "account_check_frequency" -> account.automaticCheckIntervalMinutes.toString()
-            "folder_sync_mode" -> account.folderSyncMode.name
-            "folder_push_mode" -> account.folderPushMode.name
             "delete_policy" -> account.deletePolicy.name
             "expunge_policy" -> account.expungePolicy.name
             "max_push_folders" -> account.maxPushFolders.toString()
@@ -127,15 +127,12 @@ class AccountSettingsDataStore(
             "account_setup_auto_expand_folder" -> {
                 loadSpecialFolder(account.autoExpandFolderId, SpecialFolderSelection.MANUAL)
             }
-            "folder_display_mode" -> account.folderDisplayMode.name
-            "folder_target_mode" -> account.folderTargetMode.name
             "searchable_folders" -> account.searchableFolders.name
             "archive_folder" -> loadSpecialFolder(account.archiveFolderId, account.archiveFolderSelection)
             "drafts_folder" -> loadSpecialFolder(account.draftsFolderId, account.draftsFolderSelection)
             "sent_folder" -> loadSpecialFolder(account.sentFolderId, account.sentFolderSelection)
             "spam_folder" -> loadSpecialFolder(account.spamFolderId, account.spamFolderSelection)
             "trash_folder" -> loadSpecialFolder(account.trashFolderId, account.trashFolderSelection)
-            "folder_notify_new_mail_mode" -> account.folderNotifyNewMailMode.name
             "account_combined_vibration" -> getCombinedVibrationValue()
             "account_remote_search_num_results" -> account.remoteSearchNumResults.toString()
             "account_ringtone" -> account.notificationSettings.ringtone
@@ -158,12 +155,6 @@ class AccountSettingsDataStore(
                     reschedulePoll()
                 }
             }
-            "folder_sync_mode" -> {
-                if (account.updateFolderSyncMode(Account.FolderMode.valueOf(value))) {
-                    reschedulePoll()
-                }
-            }
-            "folder_push_mode" -> account.folderPushMode = Account.FolderMode.valueOf(value)
             "delete_policy" -> account.deletePolicy = Account.DeletePolicy.valueOf(value)
             "expunge_policy" -> account.expungePolicy = Account.Expunge.valueOf(value)
             "max_push_folders" -> account.maxPushFolders = value.toInt()
@@ -172,15 +163,12 @@ class AccountSettingsDataStore(
             "quote_style" -> account.quoteStyle = Account.QuoteStyle.valueOf(value)
             "account_quote_prefix" -> account.quotePrefix = value
             "account_setup_auto_expand_folder" -> account.autoExpandFolderId = extractFolderId(value)
-            "folder_display_mode" -> account.folderDisplayMode = Account.FolderMode.valueOf(value)
-            "folder_target_mode" -> account.folderTargetMode = Account.FolderMode.valueOf(value)
             "searchable_folders" -> account.searchableFolders = Account.Searchable.valueOf(value)
             "archive_folder" -> saveSpecialFolderSelection(value, account::setArchiveFolderId)
             "drafts_folder" -> saveSpecialFolderSelection(value, account::setDraftsFolderId)
             "sent_folder" -> saveSpecialFolderSelection(value, account::setSentFolderId)
             "spam_folder" -> saveSpecialFolderSelection(value, account::setSpamFolderId)
             "trash_folder" -> saveSpecialFolderSelection(value, account::setTrashFolderId)
-            "folder_notify_new_mail_mode" -> account.folderNotifyNewMailMode = Account.FolderMode.valueOf(value)
             "account_combined_vibration" -> setCombinedVibrationValue(value)
             "account_remote_search_num_results" -> account.remoteSearchNumResults = value.toInt()
             "account_ringtone" -> setNotificationSound(value)

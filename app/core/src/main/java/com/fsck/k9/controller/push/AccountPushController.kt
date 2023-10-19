@@ -1,7 +1,6 @@
 package com.fsck.k9.controller.push
 
 import com.fsck.k9.Account
-import com.fsck.k9.Account.FolderMode
 import com.fsck.k9.Preferences
 import com.fsck.k9.backend.BackendManager
 import com.fsck.k9.backend.api.BackendPusher
@@ -96,7 +95,7 @@ internal class AccountPushController(
     }
 
     private fun disablePush() {
-        account.folderPushMode = FolderMode.NONE
+        account.isPushEnabled = false
         preferences.saveAccount(account)
     }
 }
