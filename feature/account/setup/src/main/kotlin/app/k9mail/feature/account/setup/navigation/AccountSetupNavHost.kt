@@ -8,6 +8,7 @@ import androidx.compose.runtime.setValue
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import app.k9mail.feature.account.common.domain.entity.IncomingProtocolType
 import app.k9mail.feature.account.server.settings.ui.incoming.IncomingServerSettingsScreen
 import app.k9mail.feature.account.server.settings.ui.incoming.IncomingServerSettingsViewModel
 import app.k9mail.feature.account.server.settings.ui.outgoing.OutgoingServerSettingsScreen
@@ -42,6 +43,7 @@ fun AccountSetupNavHost(
 ) {
     val navController = rememberNavController()
     var isAutomaticConfig by rememberSaveable { mutableStateOf(false) }
+    var hasSpecialFolders by rememberSaveable { mutableStateOf(false) }
 
     NavHost(
         navController = navController,
@@ -64,7 +66,10 @@ fun AccountSetupNavHost(
 
         composable(route = NESTED_NAVIGATION_INCOMING_SERVER_CONFIG) {
             IncomingServerSettingsScreen(
-                onNext = { navController.navigate(NESTED_NAVIGATION_INCOMING_SERVER_VALIDATION) },
+                onNext = { state ->
+                    hasSpecialFolders = checkSpecialFoldersSupport(state.protocolType)
+                    navController.navigate(NESTED_NAVIGATION_INCOMING_SERVER_VALIDATION)
+                },
                 onBack = { navController.popBackStack() },
                 viewModel = koinViewModel<IncomingServerSettingsViewModel>(),
             )
@@ -99,7 +104,13 @@ fun AccountSetupNavHost(
         composable(route = NESTED_NAVIGATION_OUTGOING_SERVER_VALIDATION) {
             ServerValidationScreen(
                 onNext = {
-                    navController.navigate(NESTED_NAVIGATION_SPECIAL_FOLDERS) {
+                    navController.navigate(
+                        if (hasSpecialFolders) {
+                            NESTED_NAVIGATION_SPECIAL_FOLDERS
+                        } else {
+                            NESTED_NAVIGATION_ACCOUNT_OPTIONS
+                        },
+                    ) {
                         if (isAutomaticConfig) {
                             popUpTo(NESTED_NAVIGATION_AUTO_CONFIG)
                         } else {
@@ -138,4 +149,8 @@ fun AccountSetupNavHost(
             )
         }
     }
+}
+
+internal fun checkSpecialFoldersSupport(protocolType: IncomingProtocolType): Boolean {
+    return protocolType == IncomingProtocolType.IMAP
 }
