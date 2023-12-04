@@ -54,6 +54,7 @@ fun SpecialFoldersContent(
             error = {
                 ErrorView(
                     title = stringResource(id = R.string.account_setup_special_folders_error_message),
+                    message = state.error?.message,
                     onRetry = { onEvent(Event.OnRetryClicked) },
                 )
             },

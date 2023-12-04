@@ -12,6 +12,7 @@ import app.k9mail.feature.account.setup.ui.specialfolders.SpecialFoldersContract
 import app.k9mail.feature.account.setup.ui.specialfolders.SpecialFoldersContract.FormEvent
 import app.k9mail.feature.account.setup.ui.specialfolders.SpecialFoldersContract.State
 import app.k9mail.feature.account.setup.ui.specialfolders.SpecialFoldersContract.ViewModel
+import com.fsck.k9.mail.folders.FolderFetcherException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -48,15 +49,35 @@ class SpecialFoldersViewModel(
 
     private fun onLoadSpecialFolders() {
         viewModelScope.launch {
-            val specialFolders = getFolders()
+            try {
+                val specialFolders = getFolders()
 
-            updateState { state ->
-                state.copy(
-                    formState = specialFolders.toFormState(),
-                )
+                updateState { state ->
+                    state.copy(
+                        formState = specialFolders.toFormState(),
+                    )
+                }
+
+                validateFormState()
+            } catch (exception: FolderFetcherException) {
+                updateState { state ->
+                    state.copy(
+                        isLoading = false,
+                        isSuccess = false,
+                        error = SpecialFoldersContract.Failure.LoadFoldersFailed(exception.message ?: "unknown error"),
+                    )
+                }
+            } catch (exception: IllegalStateException) {
+                updateState { state ->
+                    state.copy(
+                        isLoading = false,
+                        isSuccess = false,
+                        error = SpecialFoldersContract.Failure.MissingIncomingServerSettings(
+                            exception.message ?: "unknown error",
+                        ),
+                    )
+                }
             }
-
-            validateFormState()
         }
     }
 

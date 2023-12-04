@@ -57,7 +57,10 @@ interface SpecialFoldersContract {
     }
 
     sealed interface Failure {
-        data class UnknownError(val message: String) : Failure
-        data class SaveFailed(val message: String) : Failure
+        val message: String
+
+        data class MissingIncomingServerSettings(override val message: String) : Failure
+        data class LoadFoldersFailed(override val message: String) : Failure
+        data class SaveFailed(override val message: String) : Failure
     }
 }

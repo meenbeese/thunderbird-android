@@ -21,6 +21,7 @@ import assertk.assertThat
 import assertk.assertions.containsExactly
 import assertk.assertions.isEqualTo
 import com.fsck.k9.mail.FolderType
+import com.fsck.k9.mail.folders.FolderFetcherException
 import com.fsck.k9.mail.folders.FolderServerId
 import com.fsck.k9.mail.folders.RemoteFolder
 import kotlinx.coroutines.delay
@@ -44,7 +45,6 @@ class SpecialFoldersViewModelTest {
                 formUiModel = FakeSpecialFoldersFormUiModel(
                     isValid = true,
                 ),
-                folders = FOLDERS,
                 accountStateRepository = accountStateRepository,
                 initialState = initialState,
             )
@@ -113,7 +113,6 @@ class SpecialFoldersViewModelTest {
             formUiModel = FakeSpecialFoldersFormUiModel(
                 isValid = false,
             ),
-            folders = FOLDERS,
             accountStateRepository = accountStateRepository,
             initialState = initialState,
         )
@@ -152,6 +151,68 @@ class SpecialFoldersViewModelTest {
         turbines.effectTurbine.ensureAllEventsConsumed()
 
         assertThat(accountStateRepository.getState()).isEqualTo(AccountState())
+    }
+
+    @Test
+    fun `should change to error state when LoadSpecialFolders fails with missing incoming server settings`() = runTest {
+        val initialState = State(
+            isLoading = true,
+        )
+        val testSubject = createTestSubject(
+            formUiModel = FakeSpecialFoldersFormUiModel(
+                isValid = false,
+            ),
+            getFolders = {
+                throw IllegalStateException("No incoming server settings available")
+            },
+            initialState = initialState,
+        )
+        val turbines = turbinesWithInitialStateCheck(testSubject, initialState)
+
+        testSubject.event(Event.LoadSpecialFolders)
+
+        turbines.assertThatAndStateTurbineConsumed {
+            isEqualTo(
+                State(
+                    isLoading = false,
+                    isSuccess = false,
+                    error = SpecialFoldersContract.Failure.MissingIncomingServerSettings(
+                        "No incoming server settings available",
+                    ),
+                ),
+            )
+        }
+    }
+
+    @Test
+    fun `should change to error state when LoadSpecialFolders fails with loading folder failure`() = runTest {
+        val initialState = State(
+            isLoading = true,
+        )
+        val testSubject = createTestSubject(
+            formUiModel = FakeSpecialFoldersFormUiModel(
+                isValid = false,
+            ),
+            getFolders = {
+                throw FolderFetcherException(IllegalStateException("Failed to load folders"))
+            },
+            initialState = initialState,
+        )
+        val turbines = turbinesWithInitialStateCheck(testSubject, initialState)
+
+        testSubject.event(Event.LoadSpecialFolders)
+
+        turbines.assertThatAndStateTurbineConsumed {
+            isEqualTo(
+                State(
+                    isLoading = false,
+                    isSuccess = false,
+                    error = SpecialFoldersContract.Failure.LoadFoldersFailed(
+                        "Failed to load folders",
+                    ),
+                ),
+            )
+        }
     }
 
     @Test
@@ -230,14 +291,14 @@ class SpecialFoldersViewModelTest {
     private companion object {
         fun createTestSubject(
             formUiModel: SpecialFoldersContract.FormUiModel = FakeSpecialFoldersFormUiModel(),
-            folders: Folders = FOLDERS,
+            getFolders: () -> Folders = { FOLDERS },
             accountStateRepository: AccountDomainContract.AccountStateRepository = InMemoryAccountStateRepository(),
             initialState: State = State(),
         ) = SpecialFoldersViewModel(
             formUiModel = formUiModel,
             getFolders = {
                 delay(50)
-                folders
+                getFolders()
             },
             accountStateRepository = accountStateRepository,
             initialState = initialState,

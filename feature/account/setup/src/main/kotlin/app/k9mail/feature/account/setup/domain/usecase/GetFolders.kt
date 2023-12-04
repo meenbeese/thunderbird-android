@@ -9,25 +9,33 @@ import com.fsck.k9.mail.FolderType
 import com.fsck.k9.mail.folders.FolderFetcher
 import com.fsck.k9.mail.folders.RemoteFolder
 import com.fsck.k9.mail.oauth.AuthStateStorage
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class GetFolders(
     private val folderFetcher: FolderFetcher,
     private val accountStateRepository: AccountDomainContract.AccountStateRepository,
     private val authStateStorage: AuthStateStorage,
+    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : UseCase.GetFolders {
     override suspend fun invoke(): Folders {
-        val serverSettings = accountStateRepository.getState().incomingServerSettings
-            ?: error("No incoming server settings available")
+        return withContext(coroutineDispatcher) {
+            val serverSettings = accountStateRepository.getState().incomingServerSettings
+                ?: error("No incoming server settings available")
 
-        val remoteFolders = folderFetcher.getFolders(serverSettings, authStateStorage)
+            val remoteFolders = withContext(coroutineDispatcher) {
+                folderFetcher.getFolders(serverSettings, authStateStorage)
+            }
 
-        return Folders(
-            archiveFolders = mapByFolderType(FolderType.ARCHIVE, remoteFolders),
-            draftsFolders = mapByFolderType(FolderType.DRAFTS, remoteFolders),
-            sentFolders = mapByFolderType(FolderType.SENT, remoteFolders),
-            spamFolders = mapByFolderType(FolderType.SPAM, remoteFolders),
-            trashFolders = mapByFolderType(FolderType.TRASH, remoteFolders),
-        )
+            Folders(
+                archiveFolders = mapByFolderType(FolderType.ARCHIVE, remoteFolders),
+                draftsFolders = mapByFolderType(FolderType.DRAFTS, remoteFolders),
+                sentFolders = mapByFolderType(FolderType.SENT, remoteFolders),
+                spamFolders = mapByFolderType(FolderType.SPAM, remoteFolders),
+                trashFolders = mapByFolderType(FolderType.TRASH, remoteFolders),
+            )
+        }
     }
 
     private fun mapByFolderType(
