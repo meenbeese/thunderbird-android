@@ -51,9 +51,10 @@ fun AccountSetupNavHost(
     ) {
         composable(route = NESTED_NAVIGATION_AUTO_CONFIG) {
             AccountAutoDiscoveryScreen(
-                onNext = { automaticConfig ->
-                    isAutomaticConfig = automaticConfig
+                onNext = { result ->
+                    isAutomaticConfig = result.isAutomaticConfig
                     if (isAutomaticConfig) {
+                        hasSpecialFolders = checkSpecialFoldersSupport(result.incomingProtocolType)
                         navController.navigate(NESTED_NAVIGATION_INCOMING_SERVER_VALIDATION)
                     } else {
                         navController.navigate(NESTED_NAVIGATION_INCOMING_SERVER_CONFIG)
@@ -151,6 +152,6 @@ fun AccountSetupNavHost(
     }
 }
 
-internal fun checkSpecialFoldersSupport(protocolType: IncomingProtocolType): Boolean {
+internal fun checkSpecialFoldersSupport(protocolType: IncomingProtocolType?): Boolean {
     return protocolType == IncomingProtocolType.IMAP
 }

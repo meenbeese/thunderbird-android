@@ -3,6 +3,7 @@ package app.k9mail.feature.account.setup.ui.autodiscovery
 import app.k9mail.core.ui.compose.testing.ComposeTest
 import app.k9mail.core.ui.compose.testing.setContent
 import app.k9mail.core.ui.compose.theme.ThunderbirdTheme
+import app.k9mail.feature.account.common.domain.entity.IncomingProtocolType
 import app.k9mail.feature.account.setup.ui.autodiscovery.AccountAutoDiscoveryContract.Effect
 import app.k9mail.feature.account.setup.ui.autodiscovery.AccountAutoDiscoveryContract.State
 import assertk.assertThat
@@ -32,7 +33,14 @@ class AccountAutoDiscoveryScreenKtTest : ComposeTest() {
         assertThat(onNextCounter).isEqualTo(0)
         assertThat(onBackCounter).isEqualTo(0)
 
-        viewModel.effect(Effect.NavigateNext(isAutomaticConfig = false))
+        viewModel.effect(
+            Effect.NavigateNext(
+                result = AccountAutoDiscoveryContract.AutoDiscoveryUiResult(
+                    isAutomaticConfig = false,
+                    incomingProtocolType = IncomingProtocolType.IMAP,
+                ),
+            ),
+        )
 
         assertThat(onNextCounter).isEqualTo(1)
         assertThat(onBackCounter).isEqualTo(0)
