@@ -5,7 +5,10 @@ import app.k9mail.feature.account.common.domain.entity.AuthorizationState
 import app.k9mail.feature.account.edit.AccountEditExternalContract
 import app.k9mail.feature.account.edit.AccountEditExternalContract.AccountUpdaterFailure
 import app.k9mail.feature.account.edit.AccountEditExternalContract.AccountUpdaterResult
+import com.fsck.k9.Account
+import com.fsck.k9.LocalKeyStoreManager
 import com.fsck.k9.logging.Timber
+import com.fsck.k9.mail.MailServerDirection
 import com.fsck.k9.mail.ServerSettings
 import com.fsck.k9.mail.store.imap.ImapStoreSettings
 import com.fsck.k9.mail.store.imap.ImapStoreSettings.autoDetectNamespace
@@ -19,6 +22,7 @@ import kotlinx.coroutines.withContext
 
 class AccountServerSettingsUpdater(
     private val accountManager: AccountManager,
+    private val localKeyStoreManager: LocalKeyStoreManager,
     private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : AccountEditExternalContract.AccountServerSettingsUpdater {
 
@@ -50,6 +54,8 @@ class AccountServerSettingsUpdater(
             AccountUpdaterFailure.AccountNotFound(accountUuid),
         )
 
+        deleteCertificate(account, isIncoming, serverSettings)
+
         if (isIncoming) {
             if (serverSettings.type == Protocols.IMAP) {
                 account.useCompression = serverSettings.isUseCompression
@@ -71,6 +77,41 @@ class AccountServerSettingsUpdater(
 
         accountManager.saveAccount(account)
 
+        if (serverSettings.clientCertificateAlias != null) {
+            saveCertificate(account, isIncoming)
+        }
+
         return AccountUpdaterResult.Success(accountUuid)
+    }
+
+    private fun deleteCertificate(
+        account: Account,
+        isIncoming: Boolean,
+        serverSettings: ServerSettings,
+    ) {
+        val oldServerSettings = if (isIncoming) {
+            account.incomingServerSettings
+        } else {
+            account.outgoingServerSettings
+        }
+
+        if (oldServerSettings.host != serverSettings.host || oldServerSettings.port != serverSettings.port) {
+            localKeyStoreManager.deleteCertificate(
+                account,
+                serverSettings.host!!,
+                serverSettings.port,
+                if (isIncoming) MailServerDirection.INCOMING else MailServerDirection.OUTGOING,
+            )
+        }
+    }
+
+    private fun saveCertificate(
+        account: Account,
+        isIncoming: Boolean,
+    ) {
+        localKeyStoreManager.addCertificate(
+            account,
+            if (isIncoming) MailServerDirection.INCOMING else MailServerDirection.OUTGOING,
+        )
     }
 }
