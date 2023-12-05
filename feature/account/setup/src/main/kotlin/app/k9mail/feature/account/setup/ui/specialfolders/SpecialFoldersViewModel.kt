@@ -2,7 +2,6 @@ package app.k9mail.feature.account.setup.ui.specialfolders
 
 import androidx.lifecycle.viewModelScope
 import app.k9mail.core.ui.compose.common.mvi.BaseViewModel
-import app.k9mail.core.ui.compose.common.viewmodel.runWithCancelChildren
 import app.k9mail.feature.account.common.domain.AccountDomainContract
 import app.k9mail.feature.account.common.domain.entity.SpecialFolderSettings
 import app.k9mail.feature.account.setup.domain.DomainContract.UseCase
@@ -13,6 +12,7 @@ import app.k9mail.feature.account.setup.ui.specialfolders.SpecialFoldersContract
 import app.k9mail.feature.account.setup.ui.specialfolders.SpecialFoldersContract.State
 import app.k9mail.feature.account.setup.ui.specialfolders.SpecialFoldersContract.ViewModel
 import com.fsck.k9.mail.folders.FolderFetcherException
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -155,15 +155,18 @@ class SpecialFoldersViewModel(
         }
     }
 
-    private fun navigateNext() = runWithCancelChildren {
+    private fun navigateNext() {
+        viewModelScope.coroutineContext.cancelChildren()
         emitEffect(Effect.NavigateNext)
     }
 
-    private fun onBackClicked() = runWithCancelChildren {
+    private fun onBackClicked() {
+        viewModelScope.coroutineContext.cancelChildren()
         emitEffect(Effect.NavigateBack)
     }
 
-    private fun onEditClicked() = runWithCancelChildren {
+    private fun onEditClicked() {
+        viewModelScope.coroutineContext.cancelChildren()
         updateState { state ->
             state.copy(
                 isSuccess = false,
@@ -171,7 +174,8 @@ class SpecialFoldersViewModel(
         }
     }
 
-    private fun onRetryClicked() = runWithCancelChildren {
+    private fun onRetryClicked() {
+        viewModelScope.coroutineContext.cancelChildren()
         updateState {
             it.copy(
                 error = null,
