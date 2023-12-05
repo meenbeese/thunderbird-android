@@ -1,6 +1,6 @@
 package app.k9mail.feature.account.setup.ui.specialfolders
 
-import app.k9mail.feature.account.common.domain.entity.Folder
+import app.k9mail.feature.account.common.domain.entity.SpecialFolderOption
 import app.k9mail.feature.account.setup.ui.specialfolders.SpecialFoldersContract.FormEvent
 import app.k9mail.feature.account.setup.ui.specialfolders.SpecialFoldersContract.FormState
 import assertk.assertThat
@@ -21,7 +21,7 @@ class SpecialFoldersFormUiModelTest {
 
         val result = testSubject.event(FormEvent.ArchiveFolderChanged(folder), FORM_STATE)
 
-        assertThat(result).isEqualTo(FORM_STATE.copy(selectedArchiveFolder = folder))
+        assertThat(result).isEqualTo(FORM_STATE.copy(selectedArchiveSpecialFolderOption = folder))
     }
 
     @Test
@@ -30,7 +30,7 @@ class SpecialFoldersFormUiModelTest {
 
         val result = testSubject.event(FormEvent.DraftsFolderChanged(folder), FORM_STATE)
 
-        assertThat(result).isEqualTo(FORM_STATE.copy(selectedDraftsFolder = folder))
+        assertThat(result).isEqualTo(FORM_STATE.copy(selectedDraftsSpecialFolderOption = folder))
     }
 
     @Test
@@ -39,7 +39,7 @@ class SpecialFoldersFormUiModelTest {
 
         val result = testSubject.event(FormEvent.SentFolderChanged(folder), FORM_STATE)
 
-        assertThat(result).isEqualTo(FORM_STATE.copy(selectedSentFolder = folder))
+        assertThat(result).isEqualTo(FORM_STATE.copy(selectedSentSpecialFolderOption = folder))
     }
 
     @Test
@@ -48,7 +48,7 @@ class SpecialFoldersFormUiModelTest {
 
         val result = testSubject.event(FormEvent.SpamFolderChanged(folder), FORM_STATE)
 
-        assertThat(result).isEqualTo(FORM_STATE.copy(selectedSpamFolder = createFolder("spamFolder")))
+        assertThat(result).isEqualTo(FORM_STATE.copy(selectedSpamSpecialFolderOption = createFolder("spamFolder")))
     }
 
     @Test
@@ -57,7 +57,7 @@ class SpecialFoldersFormUiModelTest {
 
         val result = testSubject.event(FormEvent.TrashFolderChanged(folder), FORM_STATE)
 
-        assertThat(result).isEqualTo(FORM_STATE.copy(selectedTrashFolder = folder))
+        assertThat(result).isEqualTo(FORM_STATE.copy(selectedTrashSpecialFolderOption = folder))
     }
 
     @Test
@@ -71,27 +71,27 @@ class SpecialFoldersFormUiModelTest {
     fun `validate should return false when one of the folders is not selected`() = runTest {
         val archiveResult = testSubject.validate(
             FORM_STATE_WITH_SELECTION.copy(
-                selectedArchiveFolder = null,
+                selectedArchiveSpecialFolderOption = null,
             ),
         )
         val draftsResult = testSubject.validate(
             FORM_STATE_WITH_SELECTION.copy(
-                selectedDraftsFolder = null,
+                selectedDraftsSpecialFolderOption = null,
             ),
         )
         val sentResult = testSubject.validate(
             FORM_STATE_WITH_SELECTION.copy(
-                selectedSentFolder = null,
+                selectedSentSpecialFolderOption = null,
             ),
         )
         val spamResult = testSubject.validate(
             FORM_STATE_WITH_SELECTION.copy(
-                selectedSpamFolder = null,
+                selectedSpamSpecialFolderOption = null,
             ),
         )
         val trashResult = testSubject.validate(
             FORM_STATE_WITH_SELECTION.copy(
-                selectedTrashFolder = null,
+                selectedTrashSpecialFolderOption = null,
             ),
         )
 
@@ -104,23 +104,23 @@ class SpecialFoldersFormUiModelTest {
 
     private companion object {
         val FORM_STATE = FormState(
-            archiveFolders = listOf(createFolder("archiveFolder")),
-            draftsFolders = listOf(createFolder("draftsFolder")),
-            sentFolders = listOf(createFolder("sentFolder")),
-            spamFolders = listOf(createFolder("spamFolder")),
-            trashFolders = listOf(createFolder("trashFolder")),
+            archiveSpecialFolderOptions = listOf(createFolder("archiveFolder")),
+            draftsSpecialFolderOptions = listOf(createFolder("draftsFolder")),
+            sentSpecialFolderOptions = listOf(createFolder("sentFolder")),
+            spamSpecialFolderOptions = listOf(createFolder("spamFolder")),
+            trashSpecialFolderOptions = listOf(createFolder("trashFolder")),
         )
 
         val FORM_STATE_WITH_SELECTION = FORM_STATE.copy(
-            selectedArchiveFolder = createFolder("archiveFolder"),
-            selectedDraftsFolder = createFolder("draftsFolder"),
-            selectedSentFolder = createFolder("sentFolder"),
-            selectedSpamFolder = createFolder("spamFolder"),
-            selectedTrashFolder = createFolder("trashFolder"),
+            selectedArchiveSpecialFolderOption = createFolder("archiveFolder"),
+            selectedDraftsSpecialFolderOption = createFolder("draftsFolder"),
+            selectedSentSpecialFolderOption = createFolder("sentFolder"),
+            selectedSpamSpecialFolderOption = createFolder("spamFolder"),
+            selectedTrashSpecialFolderOption = createFolder("trashFolder"),
         )
 
-        fun createFolder(folderName: String): Folder {
-            return Folder.Regular(
+        fun createFolder(folderName: String): SpecialFolderOption {
+            return SpecialFolderOption.Regular(
                 RemoteFolder(
                     serverId = FolderServerId(folderName),
                     displayName = folderName,

@@ -3,8 +3,8 @@ package app.k9mail.feature.account.setup.domain.usecase
 import app.k9mail.feature.account.common.domain.entity.Account
 import app.k9mail.feature.account.common.domain.entity.AccountOptions
 import app.k9mail.feature.account.common.domain.entity.MailConnectionSecurity
-import app.k9mail.feature.account.common.domain.entity.SpecialFolder
 import app.k9mail.feature.account.common.domain.entity.SpecialFolderSettings
+import app.k9mail.feature.account.common.domain.entity.SpecialSpecialFolderOption
 import app.k9mail.feature.account.setup.AccountSetupExternalContract.AccountCreator.AccountCreatorResult
 import assertk.assertThat
 import assertk.assertions.isEqualTo
@@ -80,19 +80,19 @@ class CreateAccountTest {
         const val AUTHORIZATION_STATE = "authorization state"
 
         val SPECIAL_FOLDER_SETTINGS = SpecialFolderSettings(
-            archiveFolder = SpecialFolder.Archive(
+            archiveSpecialFolderOption = SpecialSpecialFolderOption.Archive(
                 RemoteFolder(FolderServerId("archive"), "archive", FolderType.ARCHIVE),
             ),
-            draftsFolder = SpecialFolder.Drafts(
+            draftsSpecialFolderOption = SpecialSpecialFolderOption.Drafts(
                 RemoteFolder(FolderServerId("drafts"), "drafts", FolderType.DRAFTS),
             ),
-            sentFolder = SpecialFolder.Sent(
+            sentSpecialFolderOption = SpecialSpecialFolderOption.Sent(
                 RemoteFolder(FolderServerId("sent"), "sent", FolderType.SENT),
             ),
-            spamFolder = SpecialFolder.Spam(
+            spamSpecialFolderOption = SpecialSpecialFolderOption.Spam(
                 RemoteFolder(FolderServerId("spam"), "spam", FolderType.SPAM),
             ),
-            trashFolder = SpecialFolder.Trash(
+            trashSpecialFolderOption = SpecialSpecialFolderOption.Trash(
                 RemoteFolder(FolderServerId("trash"), "trash", FolderType.TRASH),
             ),
         )

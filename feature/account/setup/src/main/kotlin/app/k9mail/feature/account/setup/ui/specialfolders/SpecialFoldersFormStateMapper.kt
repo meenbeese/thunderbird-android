@@ -1,28 +1,28 @@
 package app.k9mail.feature.account.setup.ui.specialfolders
 
-import app.k9mail.feature.account.common.domain.entity.Folder
 import app.k9mail.feature.account.common.domain.entity.Folders
-import app.k9mail.feature.account.common.domain.entity.SpecialFolder
+import app.k9mail.feature.account.common.domain.entity.SpecialFolderOption
+import app.k9mail.feature.account.common.domain.entity.SpecialSpecialFolderOption
 import app.k9mail.feature.account.setup.ui.specialfolders.SpecialFoldersContract.FormState
 
 fun Folders.toFormState(): FormState {
     return FormState(
-        archiveFolders = archiveFolders,
-        draftsFolders = draftsFolders,
-        sentFolders = sentFolders,
-        spamFolders = spamFolders,
-        trashFolders = trashFolders,
+        archiveSpecialFolderOptions = archiveSpecialFolderOptions,
+        draftsSpecialFolderOptions = draftsSpecialFolderOptions,
+        sentSpecialFolderOptions = sentSpecialFolderOptions,
+        spamSpecialFolderOptions = spamSpecialFolderOptions,
+        trashSpecialFolderOptions = trashSpecialFolderOptions,
 
-        selectedArchiveFolder = archiveFolders.mapToDefaultFolder(),
-        selectedDraftsFolder = draftsFolders.mapToDefaultFolder(),
-        selectedSentFolder = sentFolders.mapToDefaultFolder(),
-        selectedSpamFolder = spamFolders.mapToDefaultFolder(),
-        selectedTrashFolder = trashFolders.mapToDefaultFolder(),
+        selectedArchiveSpecialFolderOption = archiveSpecialFolderOptions.mapToDefaultFolder(),
+        selectedDraftsSpecialFolderOption = draftsSpecialFolderOptions.mapToDefaultFolder(),
+        selectedSentSpecialFolderOption = sentSpecialFolderOptions.mapToDefaultFolder(),
+        selectedSpamSpecialFolderOption = spamSpecialFolderOptions.mapToDefaultFolder(),
+        selectedTrashSpecialFolderOption = trashSpecialFolderOptions.mapToDefaultFolder(),
     )
 }
 
-private fun List<Folder>.mapToDefaultFolder(): Folder? {
+private fun List<SpecialFolderOption>.mapToDefaultFolder(): SpecialFolderOption? {
     return firstOrNull {
-        (it is SpecialFolder && it.isAutomatic)
+        (it is SpecialSpecialFolderOption && it.isAutomatic)
     }
 }

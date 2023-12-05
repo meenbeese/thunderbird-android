@@ -7,10 +7,10 @@ import app.k9mail.core.ui.compose.testing.mvi.turbinesWithInitialStateCheck
 import app.k9mail.feature.account.common.data.InMemoryAccountStateRepository
 import app.k9mail.feature.account.common.domain.AccountDomainContract
 import app.k9mail.feature.account.common.domain.entity.AccountState
-import app.k9mail.feature.account.common.domain.entity.Folder
 import app.k9mail.feature.account.common.domain.entity.Folders
-import app.k9mail.feature.account.common.domain.entity.SpecialFolder
+import app.k9mail.feature.account.common.domain.entity.SpecialFolderOption
 import app.k9mail.feature.account.common.domain.entity.SpecialFolderSettings
+import app.k9mail.feature.account.common.domain.entity.SpecialSpecialFolderOption
 import app.k9mail.feature.account.setup.ui.specialfolders.SpecialFoldersContract.Effect
 import app.k9mail.feature.account.setup.ui.specialfolders.SpecialFoldersContract.Event
 import app.k9mail.feature.account.setup.ui.specialfolders.SpecialFoldersContract.FormEvent
@@ -56,17 +56,17 @@ class SpecialFoldersViewModelTest {
                 isLoading = true,
                 isSuccess = false,
                 formState = FormState(
-                    archiveFolders = FOLDERS.archiveFolders,
-                    draftsFolders = FOLDERS.draftsFolders,
-                    sentFolders = FOLDERS.sentFolders,
-                    spamFolders = FOLDERS.spamFolders,
-                    trashFolders = FOLDERS.trashFolders,
+                    archiveSpecialFolderOptions = FOLDERS.archiveSpecialFolderOptions,
+                    draftsSpecialFolderOptions = FOLDERS.draftsSpecialFolderOptions,
+                    sentSpecialFolderOptions = FOLDERS.sentSpecialFolderOptions,
+                    spamSpecialFolderOptions = FOLDERS.spamSpecialFolderOptions,
+                    trashSpecialFolderOptions = FOLDERS.trashSpecialFolderOptions,
 
-                    selectedArchiveFolder = SPECIAL_FOLDER_ARCHIVE.copy(isAutomatic = true),
-                    selectedDraftsFolder = SPECIAL_FOLDER_DRAFTS.copy(isAutomatic = true),
-                    selectedSentFolder = SPECIAL_FOLDER_SENT.copy(isAutomatic = true),
-                    selectedSpamFolder = SPECIAL_FOLDER_SPAM.copy(isAutomatic = true),
-                    selectedTrashFolder = SPECIAL_FOLDER_TRASH.copy(isAutomatic = true),
+                    selectedArchiveSpecialFolderOption = SPECIAL_FOLDER_ARCHIVE.copy(isAutomatic = true),
+                    selectedDraftsSpecialFolderOption = SPECIAL_FOLDER_DRAFTS.copy(isAutomatic = true),
+                    selectedSentSpecialFolderOption = SPECIAL_FOLDER_SENT.copy(isAutomatic = true),
+                    selectedSpamSpecialFolderOption = SPECIAL_FOLDER_SPAM.copy(isAutomatic = true),
+                    selectedTrashSpecialFolderOption = SPECIAL_FOLDER_TRASH.copy(isAutomatic = true),
                 ),
             )
 
@@ -93,11 +93,11 @@ class SpecialFoldersViewModelTest {
             assertThat(accountStateRepository.getState()).isEqualTo(
                 AccountState(
                     specialFolderSettings = SpecialFolderSettings(
-                        archiveFolder = SPECIAL_FOLDER_ARCHIVE.copy(isAutomatic = true),
-                        draftsFolder = SPECIAL_FOLDER_DRAFTS.copy(isAutomatic = true),
-                        sentFolder = SPECIAL_FOLDER_SENT.copy(isAutomatic = true),
-                        spamFolder = SPECIAL_FOLDER_SPAM.copy(isAutomatic = true),
-                        trashFolder = SPECIAL_FOLDER_TRASH.copy(isAutomatic = true),
+                        archiveSpecialFolderOption = SPECIAL_FOLDER_ARCHIVE.copy(isAutomatic = true),
+                        draftsSpecialFolderOption = SPECIAL_FOLDER_DRAFTS.copy(isAutomatic = true),
+                        sentSpecialFolderOption = SPECIAL_FOLDER_SENT.copy(isAutomatic = true),
+                        spamSpecialFolderOption = SPECIAL_FOLDER_SPAM.copy(isAutomatic = true),
+                        trashSpecialFolderOption = SPECIAL_FOLDER_TRASH.copy(isAutomatic = true),
                     ),
                 ),
             )
@@ -124,17 +124,17 @@ class SpecialFoldersViewModelTest {
             isLoading = true,
             isSuccess = false,
             formState = FormState(
-                archiveFolders = FOLDERS.archiveFolders,
-                draftsFolders = FOLDERS.draftsFolders,
-                sentFolders = FOLDERS.sentFolders,
-                spamFolders = FOLDERS.spamFolders,
-                trashFolders = FOLDERS.trashFolders,
+                archiveSpecialFolderOptions = FOLDERS.archiveSpecialFolderOptions,
+                draftsSpecialFolderOptions = FOLDERS.draftsSpecialFolderOptions,
+                sentSpecialFolderOptions = FOLDERS.sentSpecialFolderOptions,
+                spamSpecialFolderOptions = FOLDERS.spamSpecialFolderOptions,
+                trashSpecialFolderOptions = FOLDERS.trashSpecialFolderOptions,
 
-                selectedArchiveFolder = SPECIAL_FOLDER_ARCHIVE.copy(isAutomatic = true),
-                selectedDraftsFolder = SPECIAL_FOLDER_DRAFTS.copy(isAutomatic = true),
-                selectedSentFolder = SPECIAL_FOLDER_SENT.copy(isAutomatic = true),
-                selectedSpamFolder = SPECIAL_FOLDER_SPAM.copy(isAutomatic = true),
-                selectedTrashFolder = SPECIAL_FOLDER_TRASH.copy(isAutomatic = true),
+                selectedArchiveSpecialFolderOption = SPECIAL_FOLDER_ARCHIVE.copy(isAutomatic = true),
+                selectedDraftsSpecialFolderOption = SPECIAL_FOLDER_DRAFTS.copy(isAutomatic = true),
+                selectedSentSpecialFolderOption = SPECIAL_FOLDER_SENT.copy(isAutomatic = true),
+                selectedSpamSpecialFolderOption = SPECIAL_FOLDER_SPAM.copy(isAutomatic = true),
+                selectedTrashSpecialFolderOption = SPECIAL_FOLDER_TRASH.copy(isAutomatic = true),
             ),
         )
 
@@ -306,42 +306,42 @@ class SpecialFoldersViewModelTest {
 
         val REMOTE_FOLDER = RemoteFolder(FolderServerId("archive"), "archive", FolderType.ARCHIVE)
 
-        val SPECIAL_FOLDER_ARCHIVE = SpecialFolder.Archive(REMOTE_FOLDER)
-        val SPECIAL_FOLDER_DRAFTS = SpecialFolder.Drafts(REMOTE_FOLDER)
-        val SPECIAL_FOLDER_SENT = SpecialFolder.Sent(REMOTE_FOLDER)
-        val SPECIAL_FOLDER_SPAM = SpecialFolder.Spam(REMOTE_FOLDER)
-        val SPECIAL_FOLDER_TRASH = SpecialFolder.Trash(REMOTE_FOLDER)
+        val SPECIAL_FOLDER_ARCHIVE = SpecialSpecialFolderOption.Archive(REMOTE_FOLDER)
+        val SPECIAL_FOLDER_DRAFTS = SpecialSpecialFolderOption.Drafts(REMOTE_FOLDER)
+        val SPECIAL_FOLDER_SENT = SpecialSpecialFolderOption.Sent(REMOTE_FOLDER)
+        val SPECIAL_FOLDER_SPAM = SpecialSpecialFolderOption.Spam(REMOTE_FOLDER)
+        val SPECIAL_FOLDER_TRASH = SpecialSpecialFolderOption.Trash(REMOTE_FOLDER)
 
         val FOLDERS = Folders(
-            archiveFolders = listOf(
+            archiveSpecialFolderOptions = listOf(
                 SPECIAL_FOLDER_ARCHIVE.copy(isAutomatic = true),
-                Folder.None(),
+                SpecialFolderOption.None(),
                 SPECIAL_FOLDER_ARCHIVE,
-                Folder.Regular(REMOTE_FOLDER),
+                SpecialFolderOption.Regular(REMOTE_FOLDER),
             ),
-            draftsFolders = listOf(
+            draftsSpecialFolderOptions = listOf(
                 SPECIAL_FOLDER_DRAFTS.copy(isAutomatic = true),
-                Folder.None(),
+                SpecialFolderOption.None(),
                 SPECIAL_FOLDER_DRAFTS,
-                Folder.Regular(REMOTE_FOLDER),
+                SpecialFolderOption.Regular(REMOTE_FOLDER),
             ),
-            sentFolders = listOf(
+            sentSpecialFolderOptions = listOf(
                 SPECIAL_FOLDER_SENT.copy(isAutomatic = true),
-                Folder.None(),
+                SpecialFolderOption.None(),
                 SPECIAL_FOLDER_SENT,
-                Folder.Regular(REMOTE_FOLDER),
+                SpecialFolderOption.Regular(REMOTE_FOLDER),
             ),
-            spamFolders = listOf(
+            spamSpecialFolderOptions = listOf(
                 SPECIAL_FOLDER_SPAM.copy(isAutomatic = true),
-                Folder.None(),
+                SpecialFolderOption.None(),
                 SPECIAL_FOLDER_SPAM,
-                Folder.Regular(REMOTE_FOLDER),
+                SpecialFolderOption.Regular(REMOTE_FOLDER),
             ),
-            trashFolders = listOf(
+            trashSpecialFolderOptions = listOf(
                 SPECIAL_FOLDER_TRASH.copy(isAutomatic = true),
-                Folder.None(),
+                SpecialFolderOption.None(),
                 SPECIAL_FOLDER_TRASH,
-                Folder.Regular(REMOTE_FOLDER),
+                SpecialFolderOption.Regular(REMOTE_FOLDER),
             ),
         )
     }

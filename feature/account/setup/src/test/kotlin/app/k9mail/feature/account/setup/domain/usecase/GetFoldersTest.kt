@@ -3,8 +3,8 @@ package app.k9mail.feature.account.setup.domain.usecase
 import app.k9mail.feature.account.common.data.InMemoryAccountStateRepository
 import app.k9mail.feature.account.common.domain.AccountDomainContract.AccountStateRepository
 import app.k9mail.feature.account.common.domain.entity.AccountState
-import app.k9mail.feature.account.common.domain.entity.Folder
-import app.k9mail.feature.account.common.domain.entity.SpecialFolder
+import app.k9mail.feature.account.common.domain.entity.SpecialFolderOption
+import app.k9mail.feature.account.common.domain.entity.SpecialSpecialFolderOption
 import app.k9mail.feature.account.setup.domain.DomainContract.UseCase
 import assertk.assertFailure
 import assertk.assertThat
@@ -63,20 +63,20 @@ class GetFoldersTest {
 
         val folders = testSubject()
 
-        assertThat(folders.archiveFolders).containsExactly(
-            *getArrayOfFolders(SpecialFolder.Archive(ARCHIVE_FOLDER_1, isAutomatic = true)),
+        assertThat(folders.archiveSpecialFolderOptions).containsExactly(
+            *getArrayOfFolders(SpecialSpecialFolderOption.Archive(ARCHIVE_FOLDER_1, isAutomatic = true)),
         )
-        assertThat(folders.draftsFolders).containsExactly(
-            *getArrayOfFolders(SpecialFolder.Drafts(DRAFTS_FOLDER_1, isAutomatic = true)),
+        assertThat(folders.draftsSpecialFolderOptions).containsExactly(
+            *getArrayOfFolders(SpecialSpecialFolderOption.Drafts(DRAFTS_FOLDER_1, isAutomatic = true)),
         )
-        assertThat(folders.sentFolders).containsExactly(
-            *getArrayOfFolders(SpecialFolder.Sent(SENT_FOLDER_1, isAutomatic = true)),
+        assertThat(folders.sentSpecialFolderOptions).containsExactly(
+            *getArrayOfFolders(SpecialSpecialFolderOption.Sent(SENT_FOLDER_1, isAutomatic = true)),
         )
-        assertThat(folders.spamFolders).containsExactly(
-            *getArrayOfFolders(SpecialFolder.Spam(SPAM_FOLDER_1, isAutomatic = true)),
+        assertThat(folders.spamSpecialFolderOptions).containsExactly(
+            *getArrayOfFolders(SpecialSpecialFolderOption.Spam(SPAM_FOLDER_1, isAutomatic = true)),
         )
-        assertThat(folders.trashFolders).containsExactly(
-            *getArrayOfFolders(SpecialFolder.Trash(TRASH_FOLDER_1, isAutomatic = true)),
+        assertThat(folders.trashSpecialFolderOptions).containsExactly(
+            *getArrayOfFolders(SpecialSpecialFolderOption.Trash(TRASH_FOLDER_1, isAutomatic = true)),
         )
     }
 
@@ -108,11 +108,36 @@ class GetFoldersTest {
 
         val folders = testSubject()
 
-        assertThat(folders.archiveFolders[0]).isEqualTo(SpecialFolder.Archive(ARCHIVE_FOLDER_2, isAutomatic = true))
-        assertThat(folders.draftsFolders[0]).isEqualTo(SpecialFolder.Drafts(DRAFTS_FOLDER_2, isAutomatic = true))
-        assertThat(folders.sentFolders[0]).isEqualTo(SpecialFolder.Sent(SENT_FOLDER_2, isAutomatic = true))
-        assertThat(folders.spamFolders[0]).isEqualTo(SpecialFolder.Spam(SPAM_FOLDER_2, isAutomatic = true))
-        assertThat(folders.trashFolders[0]).isEqualTo(SpecialFolder.Trash(TRASH_FOLDER_2, isAutomatic = true))
+        assertThat(folders.archiveSpecialFolderOptions[0]).isEqualTo(
+            SpecialSpecialFolderOption.Archive(
+                ARCHIVE_FOLDER_2,
+                isAutomatic = true,
+            ),
+        )
+        assertThat(folders.draftsSpecialFolderOptions[0]).isEqualTo(
+            SpecialSpecialFolderOption.Drafts(
+                DRAFTS_FOLDER_2,
+                isAutomatic = true,
+            ),
+        )
+        assertThat(folders.sentSpecialFolderOptions[0]).isEqualTo(
+            SpecialSpecialFolderOption.Sent(
+                SENT_FOLDER_2,
+                isAutomatic = true,
+            ),
+        )
+        assertThat(folders.spamSpecialFolderOptions[0]).isEqualTo(
+            SpecialSpecialFolderOption.Spam(
+                SPAM_FOLDER_2,
+                isAutomatic = true,
+            ),
+        )
+        assertThat(folders.trashSpecialFolderOptions[0]).isEqualTo(
+            SpecialSpecialFolderOption.Trash(
+                TRASH_FOLDER_2,
+                isAutomatic = true,
+            ),
+        )
     }
 
     @Test
@@ -130,29 +155,29 @@ class GetFoldersTest {
                 ),
             ),
         )
-        val expectedFolders = listOf(
-            Folder.None(isAutomatic = true),
-            Folder.None(),
-            Folder.Regular(REGULAR_FOLDER_1),
-            Folder.Regular(REGULAR_FOLDER_2),
+        val expectedSpecialFolderOptions = listOf(
+            SpecialFolderOption.None(isAutomatic = true),
+            SpecialFolderOption.None(),
+            SpecialFolderOption.Regular(REGULAR_FOLDER_1),
+            SpecialFolderOption.Regular(REGULAR_FOLDER_2),
         ).toTypedArray()
 
         val folders = testSubject()
 
-        assertThat(folders.archiveFolders).containsExactly(
-            *expectedFolders,
+        assertThat(folders.archiveSpecialFolderOptions).containsExactly(
+            *expectedSpecialFolderOptions,
         )
-        assertThat(folders.draftsFolders).containsExactly(
-            *expectedFolders,
+        assertThat(folders.draftsSpecialFolderOptions).containsExactly(
+            *expectedSpecialFolderOptions,
         )
-        assertThat(folders.sentFolders).containsExactly(
-            *expectedFolders,
+        assertThat(folders.sentSpecialFolderOptions).containsExactly(
+            *expectedSpecialFolderOptions,
         )
-        assertThat(folders.spamFolders).containsExactly(
-            *expectedFolders,
+        assertThat(folders.spamSpecialFolderOptions).containsExactly(
+            *expectedSpecialFolderOptions,
         )
-        assertThat(folders.trashFolders).containsExactly(
-            *expectedFolders,
+        assertThat(folders.trashSpecialFolderOptions).containsExactly(
+            *expectedSpecialFolderOptions,
         )
     }
 
@@ -240,17 +265,17 @@ class GetFoldersTest {
             type = FolderType.REGULAR,
         )
 
-        fun getArrayOfFolders(defaultFolder: Folder?): Array<Folder> {
+        fun getArrayOfFolders(defaultSpecialFolderOption: SpecialFolderOption?): Array<SpecialFolderOption> {
             return listOfNotNull(
-                defaultFolder,
-                Folder.None(),
-                SpecialFolder.Archive(ARCHIVE_FOLDER_1),
-                SpecialFolder.Drafts(DRAFTS_FOLDER_1),
-                SpecialFolder.Sent(SENT_FOLDER_1),
-                SpecialFolder.Spam(SPAM_FOLDER_1),
-                SpecialFolder.Trash(TRASH_FOLDER_1),
-                Folder.Regular(REGULAR_FOLDER_1),
-                Folder.Regular(REGULAR_FOLDER_2),
+                defaultSpecialFolderOption,
+                SpecialFolderOption.None(),
+                SpecialSpecialFolderOption.Archive(ARCHIVE_FOLDER_1),
+                SpecialSpecialFolderOption.Drafts(DRAFTS_FOLDER_1),
+                SpecialSpecialFolderOption.Sent(SENT_FOLDER_1),
+                SpecialSpecialFolderOption.Spam(SPAM_FOLDER_1),
+                SpecialSpecialFolderOption.Trash(TRASH_FOLDER_1),
+                SpecialFolderOption.Regular(REGULAR_FOLDER_1),
+                SpecialFolderOption.Regular(REGULAR_FOLDER_2),
             ).toTypedArray()
         }
 

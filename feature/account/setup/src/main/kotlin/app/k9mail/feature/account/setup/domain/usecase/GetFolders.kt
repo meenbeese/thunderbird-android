@@ -1,9 +1,9 @@
 package app.k9mail.feature.account.setup.domain.usecase
 
 import app.k9mail.feature.account.common.domain.AccountDomainContract
-import app.k9mail.feature.account.common.domain.entity.Folder
 import app.k9mail.feature.account.common.domain.entity.Folders
-import app.k9mail.feature.account.common.domain.entity.SpecialFolder
+import app.k9mail.feature.account.common.domain.entity.SpecialFolderOption
+import app.k9mail.feature.account.common.domain.entity.SpecialSpecialFolderOption
 import app.k9mail.feature.account.setup.domain.DomainContract.UseCase
 import com.fsck.k9.mail.FolderType
 import com.fsck.k9.mail.folders.FolderFetcher
@@ -27,11 +27,11 @@ class GetFolders(
             val remoteFolders = folderFetcher.getFolders(serverSettings, authStateStorage)
 
             Folders(
-                archiveFolders = mapByFolderType(FolderType.ARCHIVE, remoteFolders),
-                draftsFolders = mapByFolderType(FolderType.DRAFTS, remoteFolders),
-                sentFolders = mapByFolderType(FolderType.SENT, remoteFolders),
-                spamFolders = mapByFolderType(FolderType.SPAM, remoteFolders),
-                trashFolders = mapByFolderType(FolderType.TRASH, remoteFolders),
+                archiveSpecialFolderOptions = mapByFolderType(FolderType.ARCHIVE, remoteFolders),
+                draftsSpecialFolderOptions = mapByFolderType(FolderType.DRAFTS, remoteFolders),
+                sentSpecialFolderOptions = mapByFolderType(FolderType.SENT, remoteFolders),
+                spamSpecialFolderOptions = mapByFolderType(FolderType.SPAM, remoteFolders),
+                trashSpecialFolderOptions = mapByFolderType(FolderType.TRASH, remoteFolders),
             )
         }
     }
@@ -39,13 +39,13 @@ class GetFolders(
     private fun mapByFolderType(
         folderType: FolderType,
         remoteFolders: List<RemoteFolder>,
-    ): List<Folder> {
+    ): List<SpecialFolderOption> {
         val automaticFolder = selectAutomaticFolderByType(folderType, remoteFolders)
         val folders = remoteFolders.map { remoteFolder ->
             getFolderByType(remoteFolder)
         }
 
-        return (listOf(automaticFolder, Folder.None()) + folders)
+        return (listOf(automaticFolder, SpecialFolderOption.None()) + folders)
     }
 
     // This uses the same implementation as the SpecialFolderSelectionStrategy. In case the implementation of the
@@ -53,27 +53,27 @@ class GetFolders(
     private fun selectAutomaticFolderByType(
         folderType: FolderType,
         remoteFolders: List<RemoteFolder>,
-    ): Folder = remoteFolders.firstOrNull { folder -> folder.type == folderType }
+    ): SpecialFolderOption = remoteFolders.firstOrNull { folder -> folder.type == folderType }
         ?.let {
             getFolderByType(
                 remoteFolder = it,
                 isAutomatic = true,
             )
-        } ?: Folder.None(isAutomatic = true)
+        } ?: SpecialFolderOption.None(isAutomatic = true)
 
     private fun getFolderByType(
         remoteFolder: RemoteFolder,
         isAutomatic: Boolean = false,
-    ): Folder {
+    ): SpecialFolderOption {
         return when (remoteFolder.type) {
-            FolderType.INBOX -> SpecialFolder.Inbox(remoteFolder, isAutomatic)
-            FolderType.OUTBOX -> SpecialFolder.Outbox(remoteFolder, isAutomatic)
-            FolderType.ARCHIVE -> SpecialFolder.Archive(remoteFolder, isAutomatic)
-            FolderType.DRAFTS -> SpecialFolder.Drafts(remoteFolder, isAutomatic)
-            FolderType.SENT -> SpecialFolder.Sent(remoteFolder, isAutomatic)
-            FolderType.SPAM -> SpecialFolder.Spam(remoteFolder, isAutomatic)
-            FolderType.TRASH -> SpecialFolder.Trash(remoteFolder, isAutomatic)
-            FolderType.REGULAR -> Folder.Regular(remoteFolder)
+            FolderType.INBOX -> SpecialSpecialFolderOption.Inbox(remoteFolder, isAutomatic)
+            FolderType.OUTBOX -> SpecialSpecialFolderOption.Outbox(remoteFolder, isAutomatic)
+            FolderType.ARCHIVE -> SpecialSpecialFolderOption.Archive(remoteFolder, isAutomatic)
+            FolderType.DRAFTS -> SpecialSpecialFolderOption.Drafts(remoteFolder, isAutomatic)
+            FolderType.SENT -> SpecialSpecialFolderOption.Sent(remoteFolder, isAutomatic)
+            FolderType.SPAM -> SpecialSpecialFolderOption.Spam(remoteFolder, isAutomatic)
+            FolderType.TRASH -> SpecialSpecialFolderOption.Trash(remoteFolder, isAutomatic)
+            FolderType.REGULAR -> SpecialFolderOption.Regular(remoteFolder)
         }
     }
 }

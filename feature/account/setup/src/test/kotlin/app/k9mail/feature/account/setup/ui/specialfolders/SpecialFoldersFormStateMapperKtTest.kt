@@ -1,8 +1,8 @@
 package app.k9mail.feature.account.setup.ui.specialfolders
 
-import app.k9mail.feature.account.common.domain.entity.Folder
 import app.k9mail.feature.account.common.domain.entity.Folders
-import app.k9mail.feature.account.common.domain.entity.SpecialFolder
+import app.k9mail.feature.account.common.domain.entity.SpecialFolderOption
+import app.k9mail.feature.account.common.domain.entity.SpecialSpecialFolderOption
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.fsck.k9.mail.FolderType
@@ -16,33 +16,53 @@ class SpecialFoldersFormStateMapperKtTest {
     @Test
     fun `should map folders to form state and assign selected folders`() = runTest {
         val folders = Folders(
-            archiveFolders = createFolderList(
-                SpecialFolder.Archive(
+            archiveSpecialFolderOptions = createFolderList(
+                SpecialSpecialFolderOption.Archive(
                     createRemoteFolder("archive1"),
                     isAutomatic = true,
                 ),
             ),
-            draftsFolders = createFolderList(SpecialFolder.Drafts(createRemoteFolder("drafts1"), isAutomatic = true)),
-            sentFolders = createFolderList(SpecialFolder.Sent(createRemoteFolder("sent1"), isAutomatic = true)),
-            spamFolders = createFolderList(SpecialFolder.Spam(createRemoteFolder("spam1"), isAutomatic = true)),
-            trashFolders = createFolderList(SpecialFolder.Trash(createRemoteFolder("trash1"), isAutomatic = true)),
+            draftsSpecialFolderOptions = createFolderList(
+                SpecialSpecialFolderOption.Drafts(
+                    createRemoteFolder("drafts1"),
+                    isAutomatic = true,
+                ),
+            ),
+            sentSpecialFolderOptions = createFolderList(
+                SpecialSpecialFolderOption.Sent(
+                    createRemoteFolder("sent1"),
+                    isAutomatic = true,
+                ),
+            ),
+            spamSpecialFolderOptions = createFolderList(
+                SpecialSpecialFolderOption.Spam(
+                    createRemoteFolder("spam1"),
+                    isAutomatic = true,
+                ),
+            ),
+            trashSpecialFolderOptions = createFolderList(
+                SpecialSpecialFolderOption.Trash(
+                    createRemoteFolder("trash1"),
+                    isAutomatic = true,
+                ),
+            ),
         )
 
         val result = folders.toFormState()
 
         assertThat(result).isEqualTo(
             SpecialFoldersContract.FormState(
-                archiveFolders = folders.archiveFolders,
-                draftsFolders = folders.draftsFolders,
-                sentFolders = folders.sentFolders,
-                spamFolders = folders.spamFolders,
-                trashFolders = folders.trashFolders,
+                archiveSpecialFolderOptions = folders.archiveSpecialFolderOptions,
+                draftsSpecialFolderOptions = folders.draftsSpecialFolderOptions,
+                sentSpecialFolderOptions = folders.sentSpecialFolderOptions,
+                spamSpecialFolderOptions = folders.spamSpecialFolderOptions,
+                trashSpecialFolderOptions = folders.trashSpecialFolderOptions,
 
-                selectedArchiveFolder = folders.archiveFolders.first(),
-                selectedDraftsFolder = folders.draftsFolders.first(),
-                selectedSentFolder = folders.sentFolders.first(),
-                selectedSpamFolder = folders.spamFolders.first(),
-                selectedTrashFolder = folders.trashFolders.first(),
+                selectedArchiveSpecialFolderOption = folders.archiveSpecialFolderOptions.first(),
+                selectedDraftsSpecialFolderOption = folders.draftsSpecialFolderOptions.first(),
+                selectedSentSpecialFolderOption = folders.sentSpecialFolderOptions.first(),
+                selectedSpamSpecialFolderOption = folders.spamSpecialFolderOptions.first(),
+                selectedTrashSpecialFolderOption = folders.trashSpecialFolderOptions.first(),
             ),
         )
     }
@@ -50,28 +70,28 @@ class SpecialFoldersFormStateMapperKtTest {
     @Test
     fun `should map folders to form state and not assign selected folders when there is none automatic`() {
         val folders = Folders(
-            archiveFolders = createFolderList(Folder.None(isAutomatic = true)),
-            draftsFolders = createFolderList(Folder.None(isAutomatic = true)),
-            sentFolders = createFolderList(Folder.None(isAutomatic = true)),
-            spamFolders = createFolderList(Folder.None(isAutomatic = true)),
-            trashFolders = createFolderList(Folder.None(isAutomatic = true)),
+            archiveSpecialFolderOptions = createFolderList(SpecialFolderOption.None(isAutomatic = true)),
+            draftsSpecialFolderOptions = createFolderList(SpecialFolderOption.None(isAutomatic = true)),
+            sentSpecialFolderOptions = createFolderList(SpecialFolderOption.None(isAutomatic = true)),
+            spamSpecialFolderOptions = createFolderList(SpecialFolderOption.None(isAutomatic = true)),
+            trashSpecialFolderOptions = createFolderList(SpecialFolderOption.None(isAutomatic = true)),
         )
 
         val result = folders.toFormState()
 
         assertThat(result).isEqualTo(
             SpecialFoldersContract.FormState(
-                archiveFolders = folders.archiveFolders,
-                draftsFolders = folders.draftsFolders,
-                sentFolders = folders.sentFolders,
-                spamFolders = folders.spamFolders,
-                trashFolders = folders.trashFolders,
+                archiveSpecialFolderOptions = folders.archiveSpecialFolderOptions,
+                draftsSpecialFolderOptions = folders.draftsSpecialFolderOptions,
+                sentSpecialFolderOptions = folders.sentSpecialFolderOptions,
+                spamSpecialFolderOptions = folders.spamSpecialFolderOptions,
+                trashSpecialFolderOptions = folders.trashSpecialFolderOptions,
 
-                selectedArchiveFolder = null,
-                selectedDraftsFolder = null,
-                selectedSentFolder = null,
-                selectedSpamFolder = null,
-                selectedTrashFolder = null,
+                selectedArchiveSpecialFolderOption = null,
+                selectedDraftsSpecialFolderOption = null,
+                selectedSentSpecialFolderOption = null,
+                selectedSpamSpecialFolderOption = null,
+                selectedTrashSpecialFolderOption = null,
             ),
         )
     }
@@ -85,11 +105,11 @@ class SpecialFoldersFormStateMapperKtTest {
             )
         }
 
-        fun createFolderList(automaticFolder: Folder): List<Folder> {
+        fun createFolderList(automaticSpecialFolderOption: SpecialFolderOption): List<SpecialFolderOption> {
             return listOf(
-                automaticFolder,
-                Folder.None(),
-                Folder.Regular(createRemoteFolder("regular1")),
+                automaticSpecialFolderOption,
+                SpecialFolderOption.None(),
+                SpecialFolderOption.Regular(createRemoteFolder("regular1")),
             )
         }
     }

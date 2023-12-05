@@ -117,11 +117,11 @@ class SpecialFoldersViewModel(
             try {
                 accountStateRepository.setSpecialFolderSettings(
                     SpecialFolderSettings(
-                        archiveFolder = formState.selectedArchiveFolder!!,
-                        draftsFolder = formState.selectedDraftsFolder!!,
-                        sentFolder = formState.selectedSentFolder!!,
-                        spamFolder = formState.selectedSpamFolder!!,
-                        trashFolder = formState.selectedTrashFolder!!,
+                        archiveSpecialFolderOption = formState.selectedArchiveSpecialFolderOption!!,
+                        draftsSpecialFolderOption = formState.selectedDraftsSpecialFolderOption!!,
+                        sentSpecialFolderOption = formState.selectedSentSpecialFolderOption!!,
+                        spamSpecialFolderOption = formState.selectedSpamSpecialFolderOption!!,
+                        trashSpecialFolderOption = formState.selectedTrashSpecialFolderOption!!,
                     ),
                 )
                 updateState { state ->

@@ -28,17 +28,17 @@ class SpecialFoldersStateTest {
 
         assertThat(formState).isEqualTo(
             FormState(
-                archiveFolders = emptyList(),
-                draftsFolders = emptyList(),
-                sentFolders = emptyList(),
-                spamFolders = emptyList(),
-                trashFolders = emptyList(),
+                archiveSpecialFolderOptions = emptyList(),
+                draftsSpecialFolderOptions = emptyList(),
+                sentSpecialFolderOptions = emptyList(),
+                spamSpecialFolderOptions = emptyList(),
+                trashSpecialFolderOptions = emptyList(),
 
-                selectedArchiveFolder = null,
-                selectedDraftsFolder = null,
-                selectedSentFolder = null,
-                selectedSpamFolder = null,
-                selectedTrashFolder = null,
+                selectedArchiveSpecialFolderOption = null,
+                selectedDraftsSpecialFolderOption = null,
+                selectedSentSpecialFolderOption = null,
+                selectedSpamSpecialFolderOption = null,
+                selectedTrashSpecialFolderOption = null,
             ),
         )
     }

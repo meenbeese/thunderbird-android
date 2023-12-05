@@ -52,8 +52,8 @@ fun SpecialFoldersFormContent(
 
         item {
             SelectInput(
-                options = state.archiveFolders.toImmutableList(),
-                selectedOption = state.selectedArchiveFolder,
+                options = state.archiveSpecialFolderOptions.toImmutableList(),
+                selectedOption = state.selectedArchiveSpecialFolderOption,
                 onOptionChange = { it?.let { onEvent(FormEvent.ArchiveFolderChanged(it)) } },
                 optionToStringTransformation = { it.toResourceString(resources) },
                 label = stringResource(R.string.account_setup_special_folders_archive_folder_label),
@@ -63,8 +63,8 @@ fun SpecialFoldersFormContent(
 
         item {
             SelectInput(
-                options = state.draftsFolders.toImmutableList(),
-                selectedOption = state.selectedDraftsFolder,
+                options = state.draftsSpecialFolderOptions.toImmutableList(),
+                selectedOption = state.selectedDraftsSpecialFolderOption,
                 onOptionChange = { it?.let { onEvent(FormEvent.DraftsFolderChanged(it)) } },
                 optionToStringTransformation = { it.toResourceString(resources) },
                 label = stringResource(id = R.string.account_setup_special_folders_drafts_folder_label),
@@ -74,8 +74,8 @@ fun SpecialFoldersFormContent(
 
         item {
             SelectInput(
-                options = state.sentFolders.toImmutableList(),
-                selectedOption = state.selectedSentFolder,
+                options = state.sentSpecialFolderOptions.toImmutableList(),
+                selectedOption = state.selectedSentSpecialFolderOption,
                 onOptionChange = { it?.let { onEvent(FormEvent.SentFolderChanged(it)) } },
                 optionToStringTransformation = { it.toResourceString(resources) },
                 label = stringResource(id = R.string.account_setup_special_folders_sent_folder_label),
@@ -85,8 +85,8 @@ fun SpecialFoldersFormContent(
 
         item {
             SelectInput(
-                options = state.spamFolders.toImmutableList(),
-                selectedOption = state.selectedSpamFolder,
+                options = state.spamSpecialFolderOptions.toImmutableList(),
+                selectedOption = state.selectedSpamSpecialFolderOption,
                 onOptionChange = { it?.let { onEvent(FormEvent.SpamFolderChanged(it)) } },
                 optionToStringTransformation = { it.toResourceString(resources) },
                 label = stringResource(id = R.string.account_setup_special_folders_spam_folder_label),
@@ -96,8 +96,8 @@ fun SpecialFoldersFormContent(
 
         item {
             SelectInput(
-                options = state.trashFolders.toImmutableList(),
-                selectedOption = state.selectedTrashFolder,
+                options = state.trashSpecialFolderOptions.toImmutableList(),
+                selectedOption = state.selectedTrashSpecialFolderOption,
                 onOptionChange = { it?.let { onEvent(FormEvent.TrashFolderChanged(it)) } },
                 optionToStringTransformation = { it.toResourceString(resources) },
                 label = stringResource(id = R.string.account_setup_special_folders_trash_folder_label),
