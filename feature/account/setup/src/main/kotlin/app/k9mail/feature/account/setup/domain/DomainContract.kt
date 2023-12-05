@@ -3,7 +3,7 @@ package app.k9mail.feature.account.setup.domain
 import app.k9mail.autodiscovery.api.AutoDiscoveryResult
 import app.k9mail.core.common.domain.usecase.validation.ValidationResult
 import app.k9mail.feature.account.common.domain.entity.AccountOptions
-import app.k9mail.feature.account.common.domain.entity.Folders
+import app.k9mail.feature.account.common.domain.entity.SpecialFolderOptions
 import app.k9mail.feature.account.common.domain.entity.SpecialFolderSettings
 import app.k9mail.feature.account.setup.AccountSetupExternalContract.AccountCreator.AccountCreatorResult
 import com.fsck.k9.mail.ServerSettings
@@ -47,7 +47,7 @@ interface DomainContract {
         }
 
         fun interface GetFolders {
-            suspend operator fun invoke(): Folders
+            suspend operator fun invoke(): SpecialFolderOptions
         }
     }
 }

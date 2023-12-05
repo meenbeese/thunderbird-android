@@ -7,8 +7,8 @@ import app.k9mail.core.ui.compose.testing.mvi.turbinesWithInitialStateCheck
 import app.k9mail.feature.account.common.data.InMemoryAccountStateRepository
 import app.k9mail.feature.account.common.domain.AccountDomainContract
 import app.k9mail.feature.account.common.domain.entity.AccountState
-import app.k9mail.feature.account.common.domain.entity.Folders
 import app.k9mail.feature.account.common.domain.entity.SpecialFolderOption
+import app.k9mail.feature.account.common.domain.entity.SpecialFolderOptions
 import app.k9mail.feature.account.common.domain.entity.SpecialFolderSettings
 import app.k9mail.feature.account.common.domain.entity.SpecialSpecialFolderOption
 import app.k9mail.feature.account.setup.ui.specialfolders.SpecialFoldersContract.Effect
@@ -56,11 +56,11 @@ class SpecialFoldersViewModelTest {
                 isLoading = true,
                 isSuccess = false,
                 formState = FormState(
-                    archiveSpecialFolderOptions = FOLDERS.archiveSpecialFolderOptions,
-                    draftsSpecialFolderOptions = FOLDERS.draftsSpecialFolderOptions,
-                    sentSpecialFolderOptions = FOLDERS.sentSpecialFolderOptions,
-                    spamSpecialFolderOptions = FOLDERS.spamSpecialFolderOptions,
-                    trashSpecialFolderOptions = FOLDERS.trashSpecialFolderOptions,
+                    archiveSpecialFolderOptions = SpecialFolderOptions.archiveSpecialFolderOptions,
+                    draftsSpecialFolderOptions = SpecialFolderOptions.draftsSpecialFolderOptions,
+                    sentSpecialFolderOptions = SpecialFolderOptions.sentSpecialFolderOptions,
+                    spamSpecialFolderOptions = SpecialFolderOptions.spamSpecialFolderOptions,
+                    trashSpecialFolderOptions = SpecialFolderOptions.trashSpecialFolderOptions,
 
                     selectedArchiveSpecialFolderOption = SPECIAL_FOLDER_ARCHIVE.copy(isAutomatic = true),
                     selectedDraftsSpecialFolderOption = SPECIAL_FOLDER_DRAFTS.copy(isAutomatic = true),
@@ -124,11 +124,11 @@ class SpecialFoldersViewModelTest {
             isLoading = true,
             isSuccess = false,
             formState = FormState(
-                archiveSpecialFolderOptions = FOLDERS.archiveSpecialFolderOptions,
-                draftsSpecialFolderOptions = FOLDERS.draftsSpecialFolderOptions,
-                sentSpecialFolderOptions = FOLDERS.sentSpecialFolderOptions,
-                spamSpecialFolderOptions = FOLDERS.spamSpecialFolderOptions,
-                trashSpecialFolderOptions = FOLDERS.trashSpecialFolderOptions,
+                archiveSpecialFolderOptions = SpecialFolderOptions.archiveSpecialFolderOptions,
+                draftsSpecialFolderOptions = SpecialFolderOptions.draftsSpecialFolderOptions,
+                sentSpecialFolderOptions = SpecialFolderOptions.sentSpecialFolderOptions,
+                spamSpecialFolderOptions = SpecialFolderOptions.spamSpecialFolderOptions,
+                trashSpecialFolderOptions = SpecialFolderOptions.trashSpecialFolderOptions,
 
                 selectedArchiveSpecialFolderOption = SPECIAL_FOLDER_ARCHIVE.copy(isAutomatic = true),
                 selectedDraftsSpecialFolderOption = SPECIAL_FOLDER_DRAFTS.copy(isAutomatic = true),
@@ -162,7 +162,7 @@ class SpecialFoldersViewModelTest {
             formUiModel = FakeSpecialFoldersFormUiModel(
                 isValid = false,
             ),
-            getFolders = {
+            getSpecialFolderOptions = {
                 throw IllegalStateException("No incoming server settings available")
             },
             initialState = initialState,
@@ -193,7 +193,7 @@ class SpecialFoldersViewModelTest {
             formUiModel = FakeSpecialFoldersFormUiModel(
                 isValid = false,
             ),
-            getFolders = {
+            getSpecialFolderOptions = {
                 throw FolderFetcherException(IllegalStateException("Failed to load folders"))
             },
             initialState = initialState,
@@ -291,14 +291,14 @@ class SpecialFoldersViewModelTest {
     private companion object {
         fun createTestSubject(
             formUiModel: SpecialFoldersContract.FormUiModel = FakeSpecialFoldersFormUiModel(),
-            getFolders: () -> Folders = { FOLDERS },
+            getSpecialFolderOptions: () -> SpecialFolderOptions = { SpecialFolderOptions },
             accountStateRepository: AccountDomainContract.AccountStateRepository = InMemoryAccountStateRepository(),
             initialState: State = State(),
         ) = SpecialFoldersViewModel(
             formUiModel = formUiModel,
             getFolders = {
                 delay(50)
-                getFolders()
+                getSpecialFolderOptions()
             },
             accountStateRepository = accountStateRepository,
             initialState = initialState,
@@ -312,7 +312,7 @@ class SpecialFoldersViewModelTest {
         val SPECIAL_FOLDER_SPAM = SpecialSpecialFolderOption.Spam(REMOTE_FOLDER)
         val SPECIAL_FOLDER_TRASH = SpecialSpecialFolderOption.Trash(REMOTE_FOLDER)
 
-        val FOLDERS = Folders(
+        val SpecialFolderOptions = SpecialFolderOptions(
             archiveSpecialFolderOptions = listOf(
                 SPECIAL_FOLDER_ARCHIVE.copy(isAutomatic = true),
                 SpecialFolderOption.None(),

@@ -1,8 +1,8 @@
 package app.k9mail.feature.account.setup.domain.usecase
 
 import app.k9mail.feature.account.common.domain.AccountDomainContract
-import app.k9mail.feature.account.common.domain.entity.Folders
 import app.k9mail.feature.account.common.domain.entity.SpecialFolderOption
+import app.k9mail.feature.account.common.domain.entity.SpecialFolderOptions
 import app.k9mail.feature.account.common.domain.entity.SpecialSpecialFolderOption
 import app.k9mail.feature.account.setup.domain.DomainContract.UseCase
 import com.fsck.k9.mail.FolderType
@@ -19,14 +19,14 @@ class GetFolders(
     private val authStateStorage: AuthStateStorage,
     private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : UseCase.GetFolders {
-    override suspend fun invoke(): Folders {
+    override suspend fun invoke(): SpecialFolderOptions {
         return withContext(coroutineDispatcher) {
             val serverSettings = accountStateRepository.getState().incomingServerSettings
                 ?: error("No incoming server settings available")
 
             val remoteFolders = folderFetcher.getFolders(serverSettings, authStateStorage)
 
-            Folders(
+            SpecialFolderOptions(
                 archiveSpecialFolderOptions = mapByFolderType(FolderType.ARCHIVE, remoteFolders),
                 draftsSpecialFolderOptions = mapByFolderType(FolderType.DRAFTS, remoteFolders),
                 sentSpecialFolderOptions = mapByFolderType(FolderType.SENT, remoteFolders),

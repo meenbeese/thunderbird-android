@@ -1,11 +1,11 @@
 package app.k9mail.feature.account.setup.ui.specialfolders
 
-import app.k9mail.feature.account.common.domain.entity.Folders
 import app.k9mail.feature.account.common.domain.entity.SpecialFolderOption
+import app.k9mail.feature.account.common.domain.entity.SpecialFolderOptions
 import app.k9mail.feature.account.common.domain.entity.SpecialSpecialFolderOption
 import app.k9mail.feature.account.setup.ui.specialfolders.SpecialFoldersContract.FormState
 
-fun Folders.toFormState(): FormState {
+fun SpecialFolderOptions.toFormState(): FormState {
     return FormState(
         archiveSpecialFolderOptions = archiveSpecialFolderOptions,
         draftsSpecialFolderOptions = draftsSpecialFolderOptions,
