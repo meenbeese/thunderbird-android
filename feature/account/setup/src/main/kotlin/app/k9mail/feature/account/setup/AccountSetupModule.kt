@@ -9,7 +9,7 @@ import app.k9mail.feature.account.server.validation.featureAccountServerValidati
 import app.k9mail.feature.account.setup.domain.DomainContract
 import app.k9mail.feature.account.setup.domain.usecase.CreateAccount
 import app.k9mail.feature.account.setup.domain.usecase.GetAutoDiscovery
-import app.k9mail.feature.account.setup.domain.usecase.GetFolders
+import app.k9mail.feature.account.setup.domain.usecase.GetFoldersFolderOptions
 import app.k9mail.feature.account.setup.ui.autodiscovery.AccountAutoDiscoveryContract
 import app.k9mail.feature.account.setup.ui.autodiscovery.AccountAutoDiscoveryValidator
 import app.k9mail.feature.account.setup.ui.autodiscovery.AccountAutoDiscoveryViewModel
@@ -80,8 +80,8 @@ val featureAccountSetupModule: Module = module {
         )
     }
 
-    factory<DomainContract.UseCase.GetFolders> {
-        GetFolders(
+    factory<DomainContract.UseCase.GetSpecialFolderOptions> {
+        GetFoldersFolderOptions(
             folderFetcher = get(),
             accountStateRepository = get(),
             authStateStorage = get(),
@@ -95,7 +95,7 @@ val featureAccountSetupModule: Module = module {
     viewModel {
         SpecialFoldersViewModel(
             formUiModel = get(),
-            getFolders = get(),
+            getSpecialFolderOptions = get(),
             accountStateRepository = get(),
         )
     }

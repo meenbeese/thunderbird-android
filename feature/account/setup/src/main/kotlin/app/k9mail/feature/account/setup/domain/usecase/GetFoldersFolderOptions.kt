@@ -13,12 +13,12 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class GetFolders(
+class GetFoldersFolderOptions(
     private val folderFetcher: FolderFetcher,
     private val accountStateRepository: AccountDomainContract.AccountStateRepository,
     private val authStateStorage: AuthStateStorage,
     private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
-) : UseCase.GetFolders {
+) : UseCase.GetSpecialFolderOptions {
     override suspend fun invoke(): SpecialFolderOptions {
         return withContext(coroutineDispatcher) {
             val serverSettings = accountStateRepository.getState().incomingServerSettings

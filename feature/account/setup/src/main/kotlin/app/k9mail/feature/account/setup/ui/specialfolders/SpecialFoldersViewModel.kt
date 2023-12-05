@@ -20,7 +20,7 @@ private const val CONTINUE_NEXT_DELAY = 1500L
 
 class SpecialFoldersViewModel(
     private val formUiModel: SpecialFoldersContract.FormUiModel,
-    private val getFolders: UseCase.GetFolders,
+    private val getSpecialFolderOptions: UseCase.GetSpecialFolderOptions,
     private val accountStateRepository: AccountDomainContract.AccountStateRepository,
     initialState: State = State(),
 ) : BaseViewModel<State, Event, Effect>(initialState),
@@ -28,7 +28,7 @@ class SpecialFoldersViewModel(
 
     override fun event(event: Event) {
         when (event) {
-            Event.LoadSpecialFolders -> handleOneTimeEvent(event, ::onLoadSpecialFolders)
+            Event.LoadSpecialFolderOptions -> handleOneTimeEvent(event, ::onLoadSpecialFolderOptions)
 
             is FormEvent -> onFormEvent(event)
 
@@ -47,14 +47,14 @@ class SpecialFoldersViewModel(
         }
     }
 
-    private fun onLoadSpecialFolders() {
+    private fun onLoadSpecialFolderOptions() {
         viewModelScope.launch {
             try {
-                val specialFolders = getFolders()
+                val specialFolderOptions = getSpecialFolderOptions()
 
                 updateState { state ->
                     state.copy(
-                        formState = specialFolders.toFormState(),
+                        formState = specialFolderOptions.toFormState(),
                     )
                 }
 

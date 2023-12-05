@@ -46,7 +46,7 @@ interface DomainContract {
             fun execute(emailSignature: String): ValidationResult
         }
 
-        fun interface GetFolders {
+        fun interface GetSpecialFolderOptions {
             suspend operator fun invoke(): SpecialFolderOptions
         }
     }

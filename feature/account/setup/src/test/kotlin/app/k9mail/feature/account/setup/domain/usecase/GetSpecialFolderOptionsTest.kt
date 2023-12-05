@@ -23,7 +23,7 @@ import com.fsck.k9.mail.oauth.AuthStateStorage
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
-class GetFoldersTest {
+class GetSpecialFolderOptionsTest {
 
     @Test
     fun `should fail when no incoming server settings found`() = runTest {
@@ -185,8 +185,8 @@ class GetFoldersTest {
         fun createTestSubject(
             folderFetcher: FolderFetcher = FakeFolderFetcher(),
             accountStateRepository: AccountStateRepository = InMemoryAccountStateRepository(),
-        ): UseCase.GetFolders {
-            return GetFolders(
+        ): UseCase.GetSpecialFolderOptions {
+            return GetFoldersFolderOptions(
                 folderFetcher = folderFetcher,
                 accountStateRepository = accountStateRepository,
                 authStateStorage = accountStateRepository as AuthStateStorage,

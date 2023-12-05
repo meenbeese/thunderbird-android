@@ -33,7 +33,7 @@ fun SpecialFoldersScreen(
     }
 
     LaunchedEffect(key1 = Unit) {
-        dispatch(Event.LoadSpecialFolders)
+        dispatch(Event.LoadSpecialFolderOptions)
     }
 
     BackHandler {

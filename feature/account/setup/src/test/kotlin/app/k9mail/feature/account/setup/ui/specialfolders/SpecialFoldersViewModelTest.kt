@@ -50,7 +50,7 @@ class SpecialFoldersViewModelTest {
             )
             val turbines = turbinesWithInitialStateCheck(testSubject, initialState)
 
-            testSubject.event(Event.LoadSpecialFolders)
+            testSubject.event(Event.LoadSpecialFolderOptions)
 
             val populatedState = initialState.copy(
                 isLoading = true,
@@ -118,7 +118,7 @@ class SpecialFoldersViewModelTest {
         )
         val turbines = turbinesWithInitialStateCheck(testSubject, initialState)
 
-        testSubject.event(Event.LoadSpecialFolders)
+        testSubject.event(Event.LoadSpecialFolderOptions)
 
         val populatedState = initialState.copy(
             isLoading = true,
@@ -169,7 +169,7 @@ class SpecialFoldersViewModelTest {
         )
         val turbines = turbinesWithInitialStateCheck(testSubject, initialState)
 
-        testSubject.event(Event.LoadSpecialFolders)
+        testSubject.event(Event.LoadSpecialFolderOptions)
 
         turbines.assertThatAndStateTurbineConsumed {
             isEqualTo(
@@ -200,7 +200,7 @@ class SpecialFoldersViewModelTest {
         )
         val turbines = turbinesWithInitialStateCheck(testSubject, initialState)
 
-        testSubject.event(Event.LoadSpecialFolders)
+        testSubject.event(Event.LoadSpecialFolderOptions)
 
         turbines.assertThatAndStateTurbineConsumed {
             isEqualTo(
@@ -296,7 +296,7 @@ class SpecialFoldersViewModelTest {
             initialState: State = State(),
         ) = SpecialFoldersViewModel(
             formUiModel = formUiModel,
-            getFolders = {
+            getSpecialFolderOptions = {
                 delay(50)
                 getSpecialFolderOptions()
             },
