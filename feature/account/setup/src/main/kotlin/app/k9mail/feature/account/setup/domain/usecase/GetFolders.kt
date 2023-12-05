@@ -24,9 +24,7 @@ class GetFolders(
             val serverSettings = accountStateRepository.getState().incomingServerSettings
                 ?: error("No incoming server settings available")
 
-            val remoteFolders = withContext(coroutineDispatcher) {
-                folderFetcher.getFolders(serverSettings, authStateStorage)
-            }
+            val remoteFolders = folderFetcher.getFolders(serverSettings, authStateStorage)
 
             Folders(
                 archiveFolders = mapByFolderType(FolderType.ARCHIVE, remoteFolders),
