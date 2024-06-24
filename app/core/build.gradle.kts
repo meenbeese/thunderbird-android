@@ -17,6 +17,7 @@ dependencies {
 
     implementation(libs.okio)
     implementation(libs.commons.io)
+    implementation(libs.androidx.biometric)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.work.runtime)
     implementation(libs.androidx.fragment)
